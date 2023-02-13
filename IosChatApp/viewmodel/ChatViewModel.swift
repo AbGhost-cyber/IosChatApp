@@ -20,7 +20,7 @@ class ChatViewModel: ObservableObject, ChatSocketService {
     private var webSocketTasK: URLSessionWebSocketTask?
     @Published var currentUserName: String = ""
     @Published var userMessage: String = ""
-    @Published var users: Set<String> = []
+    @Published var userCount: Int = 0
     @Published var receivedMessages: [Message] = []
 
     
@@ -47,11 +47,14 @@ class ChatViewModel: ObservableObject, ChatSocketService {
         let socketTaskMessage =  try await webSocketTasK?.receive()
         if case .string(let stringResult) = socketTaskMessage {
             if let rawData = stringResult.data(using: .utf8) {
-                let incomingMessage = try JSONDecoder().decode(Message.self, from: rawData)
-                self.receivedMessages.append(incomingMessage)
-//                guard let user = incomingMessage.name else { return }
-//                self.users.insert(user)
-                //TODO: get users from server rather
+                if let incomingMessage = try? JSONDecoder().decode(Message.self, from: rawData) {
+                    self.receivedMessages.append(incomingMessage)
+                } else {
+                    // it is users count
+                    let count = try JSONDecoder().decode(Int.self, from: rawData)
+                    self.userCount = count
+                }
+                //TODO: ability to create groups, ability to add, admin to remove, ability to leave
                 try await observeMessages()
             }
         }

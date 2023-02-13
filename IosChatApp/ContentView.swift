@@ -7,15 +7,11 @@
 
 import SwiftUI
 
-extension Color {
-    static func random() -> Color {
-        return Color(red: Double.random(in: 0...1), green: Double.random(in: 0...1), blue: Double.random(in: 0...1))
-    }
-}
 
 struct ContentView: View {
     @ObservedObject var viewModel: ChatViewModel = ChatViewModel()
     @State private var showAddUser = false
+    let list = Array(repeating: Message(name: " Ab", message: "Hi there, good morning", id: UUID().uuidString), count: 1)
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -25,6 +21,7 @@ struct ContentView: View {
                     
                 }
             }
+            .scrollIndicators(.hidden)
             .toolbar {
                 ToolbarItem {
                     Button {
@@ -34,7 +31,7 @@ struct ContentView: View {
                     }
                 }
                 ToolbarItem(placement: .principal) {
-                    Text("Funny Group: \(viewModel.users.count) people")
+                    Text("Funny Group: \(viewModel.userCount) people")
                 }
                 ToolbarItem(placement: .bottomBar) {
                     HStack {
@@ -46,7 +43,7 @@ struct ContentView: View {
                         } label: {
                             Image(systemName: "paperplane.circle.fill")
                         }
-
+                        
                     }
                 }
             }
@@ -58,13 +55,13 @@ struct ContentView: View {
                     }
                 }
             }
-//            .task {
-//                do {
-//                    try await viewModel.observeMessages()
-//                } catch {
-//                    print("couldnt")
-//                }
-//            }
+            //            .task {
+            //                do {
+            //                    try await viewModel.observeMessages()
+            //                } catch {
+            //                    print("couldnt")
+            //                }
+            //            }
         }
     }
     
@@ -72,16 +69,18 @@ struct ContentView: View {
     private func messageItem(message: Message, index: Int) -> some View {
         let isUser = message.name == viewModel.currentUserName
         let isNotification = message.name == nil
-        let lastTextIndex = viewModel.receivedMessages.index(before: index)
-        let msgIsFromSameUser = lastTextIndex > 0 && viewModel.receivedMessages[lastTextIndex].name == message.name
+        let messages = viewModel.receivedMessages
+        let lastTextIndex = messages.index(before: index)
+        let msgIsFromSameUser = lastTextIndex != -1  && messages[lastTextIndex].name == message.name
         HStack {
             if isNotification {
                 Text(message.message)
                     .foregroundColor(Color(uiColor: .secondaryLabel))
+                    .padding(.bottom)
             } else {
                 if !isUser {
                     Circle()
-                        .fill(Color.random())
+                        .fill(Color.orange)
                         .frame(width: 50)
                         .overlay {
                             Text(String(message.name!.first!).capitalized)
@@ -89,14 +88,32 @@ struct ContentView: View {
                         }
                         .opacity(msgIsFromSameUser ? 0 : 1)
                 }
-                Text(message.message)
-                    .fontWeight(.semibold)
-                    .frame(minWidth: 30, minHeight: 20)
-                    .padding()
-                    .background(Color.accentColor)
-                    .foregroundColor(.white)
-                    .cornerRadius(30)
-                    .multilineTextAlignment(.leading)
+                VStack(alignment: isUser ? .trailing : .leading, spacing: 10) {
+                    if let name = message.name {
+                        if !msgIsFromSameUser {
+                            Text(isUser ? "you" : name)
+                                .font(.subheadline)
+                                .foregroundColor(Color(uiColor: .secondaryLabel))
+                                .fontWeight(.thin)
+                                .offset(x: !isUser ? 10: -10)
+                        }
+                    }
+                    Text(message.message)
+                        .fontWeight(.semibold)
+                        .frame(minWidth: 30, minHeight: 20)
+                        .padding()
+                        .background(isUser ? Color.accentColor : Color.clear)
+                        .foregroundColor(.white)
+                        .cornerRadius(isUser ? 25 : 0)
+                        .multilineTextAlignment(.leading)
+                        .overlay {
+                            if !isUser {
+                                RoundedRectangle(cornerRadius: 25)
+                                    .stroke(Color.accentColor, lineWidth: 1.50)
+                            }
+                        }
+                }
+                
                 if isUser {
                     Circle()
                         .fill(Color.teal)
@@ -110,7 +127,9 @@ struct ContentView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: isUser ? .trailing : isNotification ? .center : .leading)
-        .padding(msgIsFromSameUser ? .horizontal : [.top, .horizontal])
+        .padding([.top, .horizontal], msgIsFromSameUser ? -3: 30)
+        .padding(.trailing, msgIsFromSameUser ? 0: 10)
+        .padding(.leading, msgIsFromSameUser ? 10: 0)
     }
 }
 
