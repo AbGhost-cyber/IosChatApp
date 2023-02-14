@@ -11,39 +11,41 @@ import SwiftUI
 struct ContentView: View {
     @ObservedObject var viewModel: ChatViewModel = ChatViewModel()
     @State private var showAddUser = false
+    @State private var showSocketError = false
     let list = Array(repeating: Message(name: " Ab", message: "Hi there, good morning", id: UUID().uuidString), count: 1)
     var body: some View {
         NavigationStack {
-            ScrollView {
-                ForEach(viewModel.receivedMessages.indices, id: \.self) { index in
-                    let message = viewModel.receivedMessages[index]
-                    messageItem(message: message, index: index)
-                    
+            VStack {
+                ScrollView {
+                    ScrollViewReader { proxy in
+                        LazyVStack {
+                            ForEach(viewModel.receivedMessages.indices, id: \.self) { index in
+                                let message = viewModel.receivedMessages[index]
+                                messageItem(message: message, index: index)
+                            }
+                            .onChange(of: viewModel.receivedMessages.count) { _ in
+                                scrollToLastMessage(proxy: proxy)
+                            }
+                        }
+                    }
                 }
+                .scrollIndicators(.hidden)
+                chatMessageField.padding()
             }
-            .scrollIndicators(.hidden)
             .toolbar {
+                let isActive = viewModel.socketIsActive
                 ToolbarItem {
                     Button {
                         showAddUser = true
                     } label: {
                         Image(systemName: "plus")
-                    }
+                    }.disabled(isActive)
                 }
                 ToolbarItem(placement: .principal) {
-                    Text("Funny Group: \(viewModel.userCount) people")
-                }
-                ToolbarItem(placement: .bottomBar) {
                     HStack {
-                        TextField("Enter a message", text: $viewModel.userMessage)
-                        Button {
-                            Task {
-                                try await viewModel.sendMessage()
-                            }
-                        } label: {
-                            Image(systemName: "paperplane.circle.fill")
-                        }
-                        
+                        Image(systemName: "circle.fill")
+                            .foregroundColor(isActive ? .green : .red)
+                        Text("Funny Group: \(viewModel.userCount) people")
                     }
                 }
             }
@@ -55,13 +57,52 @@ struct ContentView: View {
                     }
                 }
             }
-            //            .task {
-            //                do {
-            //                    try await viewModel.observeMessages()
-            //                } catch {
-            //                    print("couldnt")
-            //                }
-            //            }
+            .onChange(of: viewModel.socketIsActive) { newValue in
+                self.showSocketError = newValue == false
+            }
+            .onChange(of: viewModel.retrySocketCount) { newValue in
+                self.showSocketError = true
+            }
+            .alert("Socket was terminated", isPresented: $showSocketError) {
+                Text("seems the socket was terminated thus no connection, please reconnect")
+                Button("retry?") {
+                    Task {
+                        try await viewModel.initSession()
+                    }
+                }
+                Button("Cancel", role: .cancel, action: {})
+            }
+        }
+    }
+    
+    private func scrollToLastMessage(proxy: ScrollViewProxy) {
+        if let lastMessage = viewModel.receivedMessages.last {
+            withAnimation(.easeOut(duration: 0.4)) {
+                let index = viewModel.receivedMessages.firstIndex(of: lastMessage)
+                proxy.scrollTo(index ?? 0, anchor: .bottom)
+            }
+        }
+    }
+    
+    private var chatMessageField: some View {
+        HStack {
+            TextField("Message", text: $viewModel.userMessage)
+                .padding(10)
+                .background(Color.secondary.opacity(0.2))
+                .cornerRadius(5)
+            
+            Button(action: {
+                Task {
+                    try await viewModel.sendMessage()
+                }
+            }) {
+                Image(systemName: "paperplane.fill")
+                    .font(.system(size: 20))
+                    .padding(6)
+            }
+            .cornerRadius(5)
+            .disabled(viewModel.userMessage.isEmpty)
+            .hoverEffect(.highlight)
         }
     }
     

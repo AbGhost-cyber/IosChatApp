@@ -22,6 +22,8 @@ class ChatViewModel: ObservableObject, ChatSocketService {
     @Published var userMessage: String = ""
     @Published var userCount: Int = 0
     @Published var receivedMessages: [Message] = []
+    @Published var socketIsActive: Bool = false
+    @Published var retrySocketCount = 0
 
     
     func initSession() async throws {
@@ -30,6 +32,7 @@ class ChatViewModel: ObservableObject, ChatSocketService {
         if let url = URL(string: "\(EndPoints.ChatSocket.url)?username=\(self.currentUserName)") {
             webSocketTasK = session.webSocketTask(with: url)
             webSocketTasK?.resume()
+            sendPing()
             try await observeMessages()
             return
         }
@@ -41,6 +44,23 @@ class ChatViewModel: ObservableObject, ChatSocketService {
         let data = try JSONEncoder().encode(message)
         try await webSocketTasK?.send(.string(String(data: data, encoding: .utf8)!))
         self.userMessage = ""
+    }
+    func updateSocketState(isActive: Bool) async {
+        self.socketIsActive = isActive
+        if !self.socketIsActive {
+            retrySocketCount += 1
+        }
+    }
+    
+    private func sendPing(){
+        webSocketTasK?.sendPing(pongReceiveHandler: { error in
+            Task {
+                await self.updateSocketState(isActive: error == nil)
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+                self.sendPing()
+            }
+        })
     }
     
     func observeMessages() async throws {
