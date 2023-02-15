@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct ContentView: View {
     @ObservedObject var viewModel: ChatViewModel = ChatViewModel()
     @State private var showAddUser = false
