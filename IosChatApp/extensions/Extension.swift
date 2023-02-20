@@ -12,6 +12,9 @@ extension Font {
     static var welcome: Font {
         boldFont(27)
     }
+    static var signupTitle: Font {
+        boldFont(27)
+    }
     static var welcomeBtn: Font {
        regularFont(16)
     }

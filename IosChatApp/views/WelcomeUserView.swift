@@ -22,13 +22,13 @@ struct WelcomeUserView: View {
                 Text("Hey! Welcome")
                     .font(.welcome)
                     .padding(.top, 50)
-                Text("Connect with multiple people around the group, create groups, enjoy private chatting and more!")
+                Text("Connect with multiple people around the globe, create groups, enjoy private chatting and more!")
                     .foregroundColor(Color(uiColor: .gray))
                     .font(.welcomeDesc)
                 Button {
                     sheetAction = .getStarted
                 } label: {
-                    buttonLabel(text: "Get Started", color: .yellow)
+                    buttonLabel(text: "Get Started", color: .yellow.opacity(0.6))
                 }
                 .padding(.top, 50)
                 Button {
@@ -43,9 +43,9 @@ struct WelcomeUserView: View {
             .sheet(item: $sheetAction) { action in
                 switch action {
                 case .hasAccount:
-                    Text("Welcome back")
+                    Text("Hello")
                 case .getStarted:
-                    Text("Lets get you")
+                    SignupView()
                 }
             }
         }
