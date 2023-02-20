@@ -15,7 +15,7 @@ struct Message: Codable, Hashable {
 }
 
 import Foundation
-@MainActor
+//@MainActor
 class ChatViewModel: ObservableObject, ChatSocketService {
     private var webSocketTasK: URLSessionWebSocketTask?
     @Published var currentUserName: String = ""

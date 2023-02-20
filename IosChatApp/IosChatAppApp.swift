@@ -11,7 +11,7 @@ import SwiftUI
 struct IosChatAppApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            WelcomeUserView()
         }
     }
 }

@@ -15,6 +15,12 @@
 		0431A05A29991C68000D5513 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431A05929991C68000D5513 /* ChatViewModel.swift */; };
 		0431A05D299CE37D000D5513 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0431A05C299CE37D000D5513 /* CryptoSwift */; };
 		0431A060299CE4D1000D5513 /* Security.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431A05F299CE4D1000D5513 /* Security.swift */; };
+		0441540329A35B4E0057BA67 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441540229A35B4E0057BA67 /* AuthService.swift */; };
+		0441540629A372F10057BA67 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441540529A372F10057BA67 /* SignupView.swift */; };
+		0441540829A38A0A0057BA67 /* WelcomeUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441540729A38A0A0057BA67 /* WelcomeUserView.swift */; };
+		0441540F29A38B210057BA67 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441540E29A38B210057BA67 /* Extension.swift */; };
+		0441541129A394050057BA67 /* Proxima Nova Font-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0441541029A394050057BA67 /* Proxima Nova Font-Bold.otf */; };
+		0441541329A3940E0057BA67 /* Proxima Nova Font-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0441541229A3940D0057BA67 /* Proxima Nova Font-Regular.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +33,12 @@
 		0431A05929991C68000D5513 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		0431A05F299CE4D1000D5513 /* Security.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Security.swift; sourceTree = "<group>"; };
 		0431A061299CF5E1000D5513 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		0441540229A35B4E0057BA67 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		0441540529A372F10057BA67 /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
+		0441540729A38A0A0057BA67 /* WelcomeUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeUserView.swift; sourceTree = "<group>"; };
+		0441540E29A38B210057BA67 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		0441541029A394050057BA67 /* Proxima Nova Font-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima Nova Font-Bold.otf"; sourceTree = "<group>"; };
+		0441541229A3940D0057BA67 /* Proxima Nova Font-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima Nova Font-Regular.otf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,10 +72,12 @@
 		0431A04429991321000D5513 /* IosChatApp */ = {
 			isa = PBXGroup;
 			children = (
+				0441540129A35B2D0057BA67 /* services */,
 				0431A05E299CE4C0000D5513 /* security */,
 				0431A05829991C38000D5513 /* viewmodel */,
+				0441540429A372BC0057BA67 /* views */,
 				0431A04529991321000D5513 /* IosChatAppApp.swift */,
-				0431A04729991321000D5513 /* ContentView.swift */,
+				0441540D29A38B150057BA67 /* extensions */,
 				0431A04929991324000D5513 /* Assets.xcassets */,
 				0431A04B29991324000D5513 /* Preview Content */,
 			);
@@ -94,6 +108,42 @@
 				0431A061299CF5E1000D5513 /* MyPlayground.playground */,
 			);
 			path = security;
+			sourceTree = "<group>";
+		};
+		0441540129A35B2D0057BA67 /* services */ = {
+			isa = PBXGroup;
+			children = (
+				0441540229A35B4E0057BA67 /* AuthService.swift */,
+			);
+			path = services;
+			sourceTree = "<group>";
+		};
+		0441540429A372BC0057BA67 /* views */ = {
+			isa = PBXGroup;
+			children = (
+				0441540A29A38A850057BA67 /* Fonts */,
+				0441540529A372F10057BA67 /* SignupView.swift */,
+				0431A04729991321000D5513 /* ContentView.swift */,
+				0441540729A38A0A0057BA67 /* WelcomeUserView.swift */,
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
+		0441540A29A38A850057BA67 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				0441541029A394050057BA67 /* Proxima Nova Font-Bold.otf */,
+				0441541229A3940D0057BA67 /* Proxima Nova Font-Regular.otf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		0441540D29A38B150057BA67 /* extensions */ = {
+			isa = PBXGroup;
+			children = (
+				0441540E29A38B210057BA67 /* Extension.swift */,
+			);
+			path = extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -161,6 +211,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				0431A04D29991324000D5513 /* Preview Assets.xcassets in Resources */,
+				0441541129A394050057BA67 /* Proxima Nova Font-Bold.otf in Resources */,
+				0441541329A3940E0057BA67 /* Proxima Nova Font-Regular.otf in Resources */,
 				0431A04A29991324000D5513 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -172,10 +224,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0441540F29A38B210057BA67 /* Extension.swift in Sources */,
+				0441540629A372F10057BA67 /* SignupView.swift in Sources */,
 				0431A04829991321000D5513 /* ContentView.swift in Sources */,
 				0431A04629991321000D5513 /* IosChatAppApp.swift in Sources */,
 				0431A05A29991C68000D5513 /* ChatViewModel.swift in Sources */,
+				0441540329A35B4E0057BA67 /* AuthService.swift in Sources */,
 				0431A060299CE4D1000D5513 /* Security.swift in Sources */,
+				0441540829A38A0A0057BA67 /* WelcomeUserView.swift in Sources */,
 				0431A054299913E5000D5513 /* ChatSocketService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -308,6 +364,7 @@
 				DEVELOPMENT_TEAM = Z2K7G5MR42;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = IosChatApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -337,6 +394,7 @@
 				DEVELOPMENT_TEAM = Z2K7G5MR42;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = IosChatApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
