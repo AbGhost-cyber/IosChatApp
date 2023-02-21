@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct IosChatAppApp: App {
+    @StateObject private var authVm: AuthViewModel = AuthViewModel()
     var body: some Scene {
         WindowGroup {
-            WelcomeUserView()
+            ViewHolder()
+                .environmentObject(authVm)
         }
     }
 }

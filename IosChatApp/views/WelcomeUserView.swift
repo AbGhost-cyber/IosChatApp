@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct WelcomeUserView: View {
-  @State private var sheetAction: SheetAction?
-    
+    @State private var sheetAction: SheetAction?
+    @ObservedObject var authVm: AuthViewModel
     var body: some View {
         ZStack {
             Rectangle()
@@ -43,10 +43,13 @@ struct WelcomeUserView: View {
             .sheet(item: $sheetAction) { action in
                 switch action {
                 case .hasAccount:
-                    Text("Hello")
+                    LoginView(authVm: authVm)
                 case .getStarted:
-                    SignupView()
+                    SignupView(authVm: authVm)
                 }
+            }
+            .onAppear {
+                print("called from welcome")
             }
         }
     }
@@ -64,7 +67,7 @@ struct WelcomeUserView: View {
 
 struct WelcomeUserView_Previews: PreviewProvider {
     static var previews: some View {
-        WelcomeUserView()
+        WelcomeUserView(authVm: AuthViewModel())
     }
 }
 

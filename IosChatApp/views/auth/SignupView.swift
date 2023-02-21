@@ -7,10 +7,14 @@
 
 import SwiftUI
 
+struct SignupProps {
+    var username: String = ""
+    var pwd: String = ""
+    var reEnteredPwd: String = ""
+}
 struct SignupView: View {
-    @State private var username = ""
-    @State private var pwd = ""
-    @State private var reEnteredPwd = ""
+    @State private var props: SignupProps = SignupProps()
+    @ObservedObject var authVm: AuthViewModel
     
     @Environment(\.dismiss) var dismiss
     
@@ -20,31 +24,28 @@ struct SignupView: View {
                 Rectangle().fill(Color.gray.opacity(0.1))
                     .ignoresSafeArea(.all)
                 ScrollView {
-                    TextField("Username", text: $username)
+                    TextField("Username", text: $props.username)
                         .padding(10)
                         .font(.secondaryMedium)
                         .frame(height: 60)
-                        .foregroundColor(.black)
-                        .background(Color.white)
+                        .background(Color(uiColor: .systemBackground))
                         .cornerRadius(10.0)
                     
-                    TextField("Password", text: $pwd)
+                    SecureField("Password", text: $props.pwd)
                         .padding(10)
                         .font(.secondaryMedium)
                         .frame(height: 60)
-                        .foregroundColor(.black)
-                        .background(Color.white)
+                        .background(Color(uiColor: .systemBackground))
                         .cornerRadius(10.0)
                         .padding(.top)
                     
-                    TextField("Re-Enter Password", text: $pwd)
+                    SecureField("Re-Enter Password", text: $props.reEnteredPwd)
                         .padding(10)
                         .font(.secondaryMedium)
                         .frame(height: 60)
-                        .background(Color.white)
+                        .background(Color(uiColor: .systemBackground))
                         .cornerRadius(12.0)
                         .padding(.top)
-                        .foregroundColor(.black)
                     
                     //MARK: buttons
                     VStack {
@@ -63,8 +64,9 @@ struct SignupView: View {
                                 .padding(.top)
                         }
                         
-                        Button {
-                            
+                        NavigationLink {
+                            LoginView(authVm: authVm)
+                                .navigationBarBackButtonHidden()
                         } label: {
                             Text("Already have an account?")
                                 .frame(maxWidth: .infinity)
@@ -89,10 +91,14 @@ struct SignupView: View {
                             dismiss()
                         } label: {
                             Image(systemName: "xmark")
+                                .font(.primaryBold)
                                 .foregroundColor(Color(uiColor: .gray))
                         }
 
                     }
+                }
+                .onAppear {
+                    print("called from sign up")
                 }
             }
         }
@@ -101,6 +107,6 @@ struct SignupView: View {
 
 struct SignupView_Previews: PreviewProvider {
     static var previews: some View {
-        SignupView()
+        SignupView(authVm: AuthViewModel())
     }
 }

@@ -21,6 +21,9 @@
 		0441540F29A38B210057BA67 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441540E29A38B210057BA67 /* Extension.swift */; };
 		0441541129A394050057BA67 /* Proxima Nova Font-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0441541029A394050057BA67 /* Proxima Nova Font-Bold.otf */; };
 		0441541329A3940E0057BA67 /* Proxima Nova Font-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0441541229A3940D0057BA67 /* Proxima Nova Font-Regular.otf */; };
+		0441541629A46B050057BA67 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441541529A46B050057BA67 /* LoginView.swift */; };
+		0441541829A472E70057BA67 /* ViewHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441541729A472E70057BA67 /* ViewHolder.swift */; };
+		0441541A29A484C80057BA67 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441541929A484C80057BA67 /* AuthViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +42,9 @@
 		0441540E29A38B210057BA67 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		0441541029A394050057BA67 /* Proxima Nova Font-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima Nova Font-Bold.otf"; sourceTree = "<group>"; };
 		0441541229A3940D0057BA67 /* Proxima Nova Font-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Proxima Nova Font-Regular.otf"; sourceTree = "<group>"; };
+		0441541529A46B050057BA67 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		0441541729A472E70057BA67 /* ViewHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewHolder.swift; sourceTree = "<group>"; };
+		0441541929A484C80057BA67 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +103,7 @@
 			children = (
 				0431A053299913E5000D5513 /* ChatSocketService.swift */,
 				0431A05929991C68000D5513 /* ChatViewModel.swift */,
+				0441541929A484C80057BA67 /* AuthViewModel.swift */,
 			);
 			path = viewmodel;
 			sourceTree = "<group>";
@@ -121,10 +128,11 @@
 		0441540429A372BC0057BA67 /* views */ = {
 			isa = PBXGroup;
 			children = (
+				0441541429A46AF20057BA67 /* auth */,
 				0441540A29A38A850057BA67 /* Fonts */,
-				0441540529A372F10057BA67 /* SignupView.swift */,
 				0431A04729991321000D5513 /* ContentView.swift */,
 				0441540729A38A0A0057BA67 /* WelcomeUserView.swift */,
+				0441541729A472E70057BA67 /* ViewHolder.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -144,6 +152,15 @@
 				0441540E29A38B210057BA67 /* Extension.swift */,
 			);
 			path = extensions;
+			sourceTree = "<group>";
+		};
+		0441541429A46AF20057BA67 /* auth */ = {
+			isa = PBXGroup;
+			children = (
+				0441540529A372F10057BA67 /* SignupView.swift */,
+				0441541529A46B050057BA67 /* LoginView.swift */,
+			);
+			path = auth;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -229,9 +246,12 @@
 				0431A04829991321000D5513 /* ContentView.swift in Sources */,
 				0431A04629991321000D5513 /* IosChatAppApp.swift in Sources */,
 				0431A05A29991C68000D5513 /* ChatViewModel.swift in Sources */,
+				0441541829A472E70057BA67 /* ViewHolder.swift in Sources */,
 				0441540329A35B4E0057BA67 /* AuthService.swift in Sources */,
 				0431A060299CE4D1000D5513 /* Security.swift in Sources */,
+				0441541A29A484C80057BA67 /* AuthViewModel.swift in Sources */,
 				0441540829A38A0A0057BA67 /* WelcomeUserView.swift in Sources */,
+				0441541629A46B050057BA67 /* LoginView.swift in Sources */,
 				0431A054299913E5000D5513 /* ChatSocketService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
