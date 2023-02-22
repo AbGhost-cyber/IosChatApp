@@ -21,15 +21,10 @@ struct SignupView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Rectangle().fill(Color.gray.opacity(0.1))
+                Rectangle().fill(Color.primary.opacity(0.1))
                     .ignoresSafeArea(.all)
                 ScrollView {
-                    TextField("Username", text: $props.username)
-                        .padding(10)
-                        .font(.secondaryMedium)
-                        .frame(height: 60)
-                        .background(Color(uiColor: .systemBackground))
-                        .cornerRadius(10.0)
+                    CTextField(value: $props.username, hint: "Username")
                     
                     SecureField("Password", text: $props.pwd)
                         .padding(10)

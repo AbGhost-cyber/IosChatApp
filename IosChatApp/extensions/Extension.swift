@@ -12,6 +12,11 @@ extension Font {
     static var welcome: Font {
         boldFont(27)
     }
+    
+    static var groupIcon: Font {
+        boldFont(80)
+    }
+    
     static var signupTitle: Font {
         boldFont(27)
     }
@@ -39,5 +44,16 @@ extension Font {
     }
     private static func boldFont(_ size: CGFloat) -> Font {
         return .custom("ProximaNova-Bold", size: size)
+    }
+}
+
+extension Binding where Value == String {
+    func max(_ limit: Int) -> Self {
+        if self.wrappedValue.count > limit {
+            DispatchQueue.main.async {
+                self.wrappedValue = String(self.wrappedValue.dropLast())
+            }
+        }
+        return self
     }
 }

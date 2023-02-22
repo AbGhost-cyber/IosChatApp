@@ -17,15 +17,10 @@ struct LoginView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Rectangle().fill(Color.gray.opacity(0.1))
+                Rectangle().fill(Color.primary.opacity(0.1))
                     .ignoresSafeArea(.all)
                 ScrollView {
-                    TextField("Username", text: $username)
-                        .padding(10)
-                        .font(.secondaryMedium)
-                        .frame(height: 60)
-                        .background(Color(uiColor: .systemBackground))
-                        .cornerRadius(10.0)
+                    CTextField(value: $username, hint: "Username")
                     
                     SecureField("Password", text: $pwd) {
                         doLogin()

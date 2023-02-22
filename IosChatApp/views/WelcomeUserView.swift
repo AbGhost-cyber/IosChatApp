@@ -13,7 +13,7 @@ struct WelcomeUserView: View {
     var body: some View {
         ZStack {
             Rectangle()
-                .fill(Color(uiColor: .systemGray6))
+                .fill(Color.primary.opacity(0.1))
                 .ignoresSafeArea(.all)
             VStack(alignment: .center, spacing: 20) {
                 Image("conversation")

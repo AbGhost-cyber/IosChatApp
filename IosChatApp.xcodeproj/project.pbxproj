@@ -25,6 +25,10 @@
 		0441541829A472E70057BA67 /* ViewHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441541729A472E70057BA67 /* ViewHolder.swift */; };
 		0441541A29A484C80057BA67 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441541929A484C80057BA67 /* AuthViewModel.swift */; };
 		04853DD029A5BB3C0075D35F /* ButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04853DCF29A5BB3C0075D35F /* ButtonLabel.swift */; };
+		04853DD429A5DD730075D35F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04853DD329A5DD730075D35F /* HomeView.swift */; };
+		04853DD729A5E1FD0075D35F /* NoItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04853DD629A5E1FD0075D35F /* NoItemView.swift */; };
+		04853DD929A5E8B80075D35F /* CreateGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04853DD829A5E8B80075D35F /* CreateGroupView.swift */; };
+		04853DDB29A5F1640075D35F /* CTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04853DDA29A5F1640075D35F /* CTextField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +51,10 @@
 		0441541729A472E70057BA67 /* ViewHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewHolder.swift; sourceTree = "<group>"; };
 		0441541929A484C80057BA67 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		04853DCF29A5BB3C0075D35F /* ButtonLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonLabel.swift; sourceTree = "<group>"; };
+		04853DD329A5DD730075D35F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		04853DD629A5E1FD0075D35F /* NoItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoItemView.swift; sourceTree = "<group>"; };
+		04853DD829A5E8B80075D35F /* CreateGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateGroupView.swift; sourceTree = "<group>"; };
+		04853DDA29A5F1640075D35F /* CTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CTextField.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,11 +138,14 @@
 		0441540429A372BC0057BA67 /* views */ = {
 			isa = PBXGroup;
 			children = (
+				04853DD529A5E1EE0075D35F /* common */,
 				0441541429A46AF20057BA67 /* auth */,
 				0441540A29A38A850057BA67 /* Fonts */,
 				0431A04729991321000D5513 /* ContentView.swift */,
 				0441540729A38A0A0057BA67 /* WelcomeUserView.swift */,
 				0441541729A472E70057BA67 /* ViewHolder.swift */,
+				04853DD329A5DD730075D35F /* HomeView.swift */,
+				04853DD829A5E8B80075D35F /* CreateGroupView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -164,6 +175,15 @@
 				04853DCF29A5BB3C0075D35F /* ButtonLabel.swift */,
 			);
 			path = auth;
+			sourceTree = "<group>";
+		};
+		04853DD529A5E1EE0075D35F /* common */ = {
+			isa = PBXGroup;
+			children = (
+				04853DD629A5E1FD0075D35F /* NoItemView.swift */,
+				04853DDA29A5F1640075D35F /* CTextField.swift */,
+			);
+			path = common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -245,6 +265,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0441540F29A38B210057BA67 /* Extension.swift in Sources */,
+				04853DD429A5DD730075D35F /* HomeView.swift in Sources */,
 				04853DD029A5BB3C0075D35F /* ButtonLabel.swift in Sources */,
 				0441540629A372F10057BA67 /* SignupView.swift in Sources */,
 				0431A04829991321000D5513 /* ContentView.swift in Sources */,
@@ -252,10 +273,13 @@
 				0431A05A29991C68000D5513 /* ChatViewModel.swift in Sources */,
 				0441541829A472E70057BA67 /* ViewHolder.swift in Sources */,
 				0441540329A35B4E0057BA67 /* AuthService.swift in Sources */,
+				04853DDB29A5F1640075D35F /* CTextField.swift in Sources */,
 				0431A060299CE4D1000D5513 /* Security.swift in Sources */,
 				0441541A29A484C80057BA67 /* AuthViewModel.swift in Sources */,
 				0441540829A38A0A0057BA67 /* WelcomeUserView.swift in Sources */,
+				04853DD929A5E8B80075D35F /* CreateGroupView.swift in Sources */,
 				0441541629A46B050057BA67 /* LoginView.swift in Sources */,
+				04853DD729A5E1FD0075D35F /* NoItemView.swift in Sources */,
 				0431A054299913E5000D5513 /* ChatSocketService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

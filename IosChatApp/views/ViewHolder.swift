@@ -13,7 +13,7 @@ struct ViewHolder: View {
     var body: some View {
         ZStack {
             if authVm.didSucceedLogin {
-                ContentView()
+                HomeView()
             }else {
                 WelcomeUserView(authVm: authVm)
             }
