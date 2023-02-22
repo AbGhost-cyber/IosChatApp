@@ -19,6 +19,9 @@ struct ViewHolder: View {
             }
         }.onAppear {
             print(authVm.didSucceedLogin)
+        }.sheet(isPresented: $authVm.didSucceedSignup) {
+            //redirect to login if did succeed signup
+            LoginView(authVm: authVm)
         }
     }
 }

@@ -48,7 +48,6 @@ class AuthServiceImpl: AuthService {
         let (data, response) = try await URLSession.shared.data(for: request)
         let statusCode = try validateHTTPResponse(of: response)
         if let serverStrResponse = String(data: data, encoding: .utf8) {
-            //TODO: persist token if path is login
             return (serverStrResponse, (200...299).contains(statusCode))
         }
         throw AuthError.unknownError

@@ -24,6 +24,7 @@
 		0441541629A46B050057BA67 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441541529A46B050057BA67 /* LoginView.swift */; };
 		0441541829A472E70057BA67 /* ViewHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441541729A472E70057BA67 /* ViewHolder.swift */; };
 		0441541A29A484C80057BA67 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441541929A484C80057BA67 /* AuthViewModel.swift */; };
+		04853DD029A5BB3C0075D35F /* ButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04853DCF29A5BB3C0075D35F /* ButtonLabel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 		0441541529A46B050057BA67 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		0441541729A472E70057BA67 /* ViewHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewHolder.swift; sourceTree = "<group>"; };
 		0441541929A484C80057BA67 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		04853DCF29A5BB3C0075D35F /* ButtonLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonLabel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +161,7 @@
 			children = (
 				0441540529A372F10057BA67 /* SignupView.swift */,
 				0441541529A46B050057BA67 /* LoginView.swift */,
+				04853DCF29A5BB3C0075D35F /* ButtonLabel.swift */,
 			);
 			path = auth;
 			sourceTree = "<group>";
@@ -242,6 +245,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0441540F29A38B210057BA67 /* Extension.swift in Sources */,
+				04853DD029A5BB3C0075D35F /* ButtonLabel.swift in Sources */,
 				0441540629A372F10057BA67 /* SignupView.swift in Sources */,
 				0431A04829991321000D5513 /* ContentView.swift in Sources */,
 				0431A04629991321000D5513 /* IosChatAppApp.swift in Sources */,

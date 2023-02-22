@@ -39,30 +39,26 @@ struct SignupView: View {
                         .cornerRadius(10.0)
                         .padding(.top)
                     
-                    SecureField("Re-Enter Password", text: $props.reEnteredPwd)
-                        .padding(10)
-                        .font(.secondaryMedium)
-                        .frame(height: 60)
-                        .background(Color(uiColor: .systemBackground))
-                        .cornerRadius(12.0)
-                        .padding(.top)
+                    SecureField("Re-Enter Password", text: $props.reEnteredPwd) {
+                        doSignUp()
+                    }
+                    .padding(10)
+                    .font(.secondaryMedium)
+                    .frame(height: 60)
+                    .background(Color(uiColor: .systemBackground))
+                    .cornerRadius(12.0)
+                    .padding(.top)
                     
                     //MARK: buttons
                     VStack {
-                        Button {
-                            
-                        } label: {
-                            Text("Create an account")
-                                .frame(maxWidth: .infinity)
-                                .padding(10)
-                                .font(.secondaryMedium)
-                                .fontWeight(.black)
-                                .frame(height: 60)
-                                .background(Color.yellow.opacity(0.6))
-                                .foregroundColor(.black)
-                                .cornerRadius(12.0)
-                                .padding(.top)
+                        Button { doSignUp() }
+                    label: {
+                        ButtonLabel(text: "Create an account", isLoading: authVm.isLoading)
+                    }.onChange(of: authVm.didSucceedSignup) { newValue in
+                        if newValue {
+                            dismiss()
                         }
+                    }
                         
                         NavigationLink {
                             LoginView(authVm: authVm)
@@ -80,7 +76,7 @@ struct SignupView: View {
                     }
                     .padding(.top)
                     
-
+                    
                 }
                 .padding()
                 .padding(.horizontal, 5)
@@ -94,13 +90,27 @@ struct SignupView: View {
                                 .font(.primaryBold)
                                 .foregroundColor(Color(uiColor: .gray))
                         }
-
+                        
                     }
                 }
-                .onAppear {
-                    print("called from sign up")
+                .alert("Error", isPresented: $authVm.showUserMessage) {
+                    Button(role: .cancel, action: {}) {
+                        Text("OK")
+                    }
+                } message: {
+                    Text(authVm.userMessage)
                 }
             }
+        }
+    }
+    
+    private func doSignUp() {
+        Task {
+            try await authVm.signup(
+                username: props.username,
+                password: props.pwd,
+                repeatedPwd: props.reEnteredPwd
+            )
         }
     }
 }

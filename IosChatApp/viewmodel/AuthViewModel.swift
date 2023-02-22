@@ -37,15 +37,24 @@ class AuthViewModel: ObservableObject {
             return
         }
         let authRequest = AuthRequest(username: username, password: password)
-        let (response, didSucceed) = try await authService.login(with: authRequest)
-        self.isLoading = false
-        self.userMessage = didSucceed ? "" : response
-        self.didSucceedLogin = didSucceed
-        defaults.set(didSucceed, forKey: "isLoggedIn")
-        //save user token local
-        if didSucceed {
-            defaults.set(response, forKey: "token")
+        do {
+            let (response, didSucceed) = try await authService.login(with: authRequest)
+            setLoadingAndMessage(isLoading: false, userMessage: didSucceed ? "" : response)
+            defaults.set(didSucceed, forKey: "isLoggedIn")
+            //save user token local
+            if didSucceed {
+                defaults.set(response, forKey: "token")
+            }
+            self.didSucceedLogin = didSucceed
+        } catch {
+            //TODO: catch error of authError
+            setLoadingAndMessage(isLoading: false, userMessage: error.localizedDescription)
         }
+    }
+    
+    private func setLoadingAndMessage(isLoading: Bool, userMessage: String) {
+        self.isLoading = isLoading
+        self.userMessage = userMessage
     }
     
     func signup(username: String, password: String, repeatedPwd: String) async throws {
@@ -60,9 +69,13 @@ class AuthViewModel: ObservableObject {
         }
         self.isLoading = true
         let authRequest = AuthRequest(username: username, password: password)
-        let (response, didSucceed) = try await authService.signup(with: authRequest)
-        self.isLoading = false
-        self.userMessage = response
-        self.didSucceedSignup = didSucceed
+        do {
+            let (response, didSucceed) = try await authService.signup(with: authRequest)
+            setLoadingAndMessage(isLoading: false, userMessage: response)
+            self.didSucceedSignup = didSucceed
+        } catch {
+            //TODO: catch error of authError
+            setLoadingAndMessage(isLoading: false, userMessage: error.localizedDescription)
+        }
     }
 }

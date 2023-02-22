@@ -27,30 +27,26 @@ struct LoginView: View {
                         .background(Color(uiColor: .systemBackground))
                         .cornerRadius(10.0)
                     
-                    TextField("Password", text: $pwd)
-                        .padding(10)
-                        .font(.secondaryMedium)
-                        .frame(height: 60)
-                        .background(Color(uiColor: .systemBackground))
-                        .cornerRadius(10.0)
-                        .padding(.top)
+                    SecureField("Password", text: $pwd) {
+                        doLogin()
+                    }
+                    .padding(10)
+                    .font(.secondaryMedium)
+                    .frame(height: 60)
+                    .background(Color(uiColor: .systemBackground))
+                    .cornerRadius(10.0)
+                    .padding(.top)
                     
                     //MARK: buttons
                     VStack {
-                        Button {
-                            Task {
-                                do {
-                                    try await authVm.login(
-                                        username: self.username,
-                                        password: self.pwd
-                                    )
-                                    print("message: \(authVm.userMessage)")
-                                } catch {
-                                    //TODO: catch error of authError
-                                    authVm.userMessage = error.localizedDescription
-                                }
-                            }
-                        } label: { loginButton }
+                        Button { doLogin() }
+                    label: {
+                        ButtonLabel(text: "Login", isLoading: authVm.isLoading)
+                    }.onChange(of: authVm.didSucceedLogin) { newValue in
+                        if newValue {
+                            dismiss()
+                        }
+                    }
                         
                         NavigationLink {
                             SignupView(authVm: authVm)
@@ -66,7 +62,7 @@ struct LoginView: View {
                                 .padding(.top)
                                 .disabled(authVm.isLoading)
                         }
-
+                        
                     }
                     .padding(.top)
                 }
@@ -82,7 +78,7 @@ struct LoginView: View {
                                 .font(.primaryBold)
                                 .foregroundColor(Color(uiColor: .gray))
                         }
-
+                        
                     }
                 }
                 .alert("Error", isPresented: $authVm.showUserMessage) {
@@ -92,31 +88,14 @@ struct LoginView: View {
                 } message: {
                     Text(authVm.userMessage)
                 }
-
+                
             }
         }
     }
     
-    private var loginButton: some View {
-        VStack {
-            Text("Login")
-                .font(.secondaryMedium)
-                .fontWeight(.black)
-                .opacity(authVm.isLoading ? 0 : 1)
-        }
-        .padding(10)
-        .frame(maxWidth: .infinity)
-        .frame(height: 55)
-        .background(Color.yellow.opacity(0.6))
-        .foregroundColor(.black)
-        .cornerRadius(12.0)
-        .padding(.top)
-        .disabled(authVm.isLoading)
-        .overlay {
-            if authVm.isLoading {
-                ProgressView()
-                    .padding(.top, 10)
-            }
+    private func doLogin() {
+        Task {
+            try await authVm.login(username: self.username,password: self.pwd)
         }
     }
 }
