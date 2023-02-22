@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var showCreateGroupSheet = false
+    @ObservedObject var userSocketVm: UserSocketViewModel
     var body: some View {
         NavigationStack {
             ZStack {
@@ -17,14 +18,16 @@ struct HomeView: View {
                 ScrollView {
                     
                 }
-                .navigationTitle("Chats")
-                .navigationBarTitleDisplayMode(.inline)
+//                .navigationTitle("Chats")
+//                .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     createGroupIcon
                     ToolbarItem(placement: .navigationBarLeading) {
                         EditButton()
-                            .foregroundColor(Color.primary)
+                            .foregroundColor(.primary)
+                            .font(.primaryBold)
                     }
+                    onlineStatus
                 }
                 .overlay {
                     NoItemView(text: "groups you've joined will appear here!")
@@ -32,6 +35,11 @@ struct HomeView: View {
                 
                 .sheet(isPresented: $showCreateGroupSheet) {
                     CreateGroupView()
+                }
+                .onAppear {
+                    Task {
+                        try await userSocketVm.connectToServer()
+                    }
                 }
             }
         }
@@ -45,6 +53,21 @@ struct HomeView: View {
                 Image(systemName: "square.and.pencil")
                     .renderingMode(.template)
                     .foregroundColor(Color.primary)
+                    .font(.primaryBold)
+            }
+        }
+    }
+    
+    
+    private var onlineStatus: some ToolbarContent {
+        ToolbarItem(placement: .principal) {
+            HStack(spacing: 10) {
+                if userSocketVm.onlineStatus == .connecting {
+                    ProgressView()
+                }
+                Text(userSocketVm.onlineStatus.text)
+                    .font(.primaryBold)
+                    .foregroundColor(.primary)
             }
         }
     }
@@ -53,7 +76,7 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
+        HomeView(userSocketVm: UserSocketViewModel())
             .preferredColorScheme(.light)
     }
 }

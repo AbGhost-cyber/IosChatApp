@@ -10,10 +10,11 @@ import SwiftUI
 struct ViewHolder: View {
     @State private var isloggedIn = false
     @EnvironmentObject var authVm: AuthViewModel
+    @EnvironmentObject var userSocketVm: UserSocketViewModel
     var body: some View {
         ZStack {
             if authVm.didSucceedLogin {
-                HomeView()
+                HomeView(userSocketVm: userSocketVm)
             }else {
                 WelcomeUserView(authVm: authVm)
             }
@@ -30,5 +31,6 @@ struct ViewHolder_Previews: PreviewProvider {
     static var previews: some View {
         ViewHolder()
             .environmentObject(AuthViewModel())
+            .environmentObject(UserSocketViewModel())
     }
 }

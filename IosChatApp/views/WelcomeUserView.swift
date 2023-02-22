@@ -48,9 +48,6 @@ struct WelcomeUserView: View {
                     SignupView(authVm: authVm)
                 }
             }
-            .onAppear {
-                print("called from welcome")
-            }
         }
     }
     @ViewBuilder

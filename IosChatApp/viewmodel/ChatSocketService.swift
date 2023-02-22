@@ -24,6 +24,9 @@ extension EndPoints {
     static var ChatSocket: EndPoints {
         EndPoints(url: "\(BASE_URL)/chat")
     }
+    static var InitConnect: EndPoints {
+        EndPoints(url: "\(BASE_URL)/connect")
+    }
 }
 
 
