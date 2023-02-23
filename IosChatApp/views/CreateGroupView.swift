@@ -8,9 +8,11 @@
 import SwiftUI
 struct CreateGroupView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var groupIcon = "🫁"
+    @State private var groupIcon = ""
     @State private var groupName = ""
     @State private var groupDesc = ""
+    @ObservedObject var userVm: UserSocketViewModel
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -40,6 +42,11 @@ struct CreateGroupView: View {
                         }
                     //MARK: Group name
                     CTextField(value: $groupName, hint: "Group name")
+                        .onChange(of: groupName) { newValue in
+                            if groupIcon.isEmpty && !newValue.isEmpty{
+                                groupIcon = String(newValue.first!)
+                            }
+                        }
                     CTextField(value: $groupDesc, hint: "Group Description")
                     Divider()
                         .padding(.top)
@@ -55,7 +62,15 @@ struct CreateGroupView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Create") {
-                        
+                        Task {
+                            try await userVm.createGroup(
+                                name: groupName,
+                                desc: groupDesc,
+                                icon: groupIcon
+                            )
+                            //maybe check api sucess before dismiss
+                            dismiss()
+                        }
                     }
                 }
             }
@@ -90,6 +105,6 @@ struct CreateGroupView: View {
 
 struct CreateGroupView_Previews: PreviewProvider {
     static var previews: some View {
-        CreateGroupView()
+        CreateGroupView(userVm: UserSocketViewModel())
     }
 }

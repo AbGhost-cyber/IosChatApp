@@ -20,12 +20,16 @@ class EndPoints {
     }
 }
 extension EndPoints {
-    static let BASE_URL = "ws://localhost:8081"
+    static let SOCKET_URL = "ws://localhost:8081"
+    static let HTTP_URL = "http://localhost:8081"
     static var ChatSocket: EndPoints {
-        EndPoints(url: "\(BASE_URL)/chat")
+        EndPoints(url: "\(SOCKET_URL)/chat")
     }
     static var InitConnect: EndPoints {
-        EndPoints(url: "\(BASE_URL)/connect")
+        EndPoints(url: "\(SOCKET_URL)/connect")
+    }
+    static var UserGroups: EndPoints {
+        EndPoints(url: "\(HTTP_URL)/group")
     }
 }
 

@@ -10,11 +10,12 @@ struct AuthRequest: Codable {
     let username: String
     let password: String
 }
-enum AuthError: Error {
+enum ServiceError: Error {
     case invalidURL
     case invalidResponseType
     case httpStatusCodeFailed(statusCode: Int, error: Error?)
     case unknownError
+    case tokenNotFound
 }
 
 protocol AuthService {
@@ -38,29 +39,17 @@ class AuthServiceImpl: AuthService {
     
     private func handleAuth(path: String, authRequest: AuthRequest) async throws -> (String, Bool) {
         guard let url = URL(string: path, relativeTo: baseUrl) else {
-            throw AuthError.invalidURL
+            throw ServiceError.invalidURL
         }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONEncoder().encode(authRequest)
         let (data, response) = try await URLSession.shared.data(for: request)
-        let statusCode = try validateHTTPResponse(of: response)
+        let statusCode = try response.validateHTTPResponse()
         if let serverStrResponse = String(data: data, encoding: .utf8) {
             return (serverStrResponse, (200...299).contains(statusCode))
         }
-        throw AuthError.unknownError
-    }
-    
-    
-    private func validateHTTPResponse(of response: URLResponse) throws -> Int {
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw AuthError.invalidResponseType
-        }
-        guard 200...299 ~= httpResponse.statusCode ||
-                400...499 ~= httpResponse.statusCode else {
-            throw AuthError.httpStatusCodeFailed(statusCode: httpResponse.statusCode, error: nil)
-        }
-        return httpResponse.statusCode
+        throw ServiceError.unknownError
     }
 }

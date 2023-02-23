@@ -31,6 +31,7 @@
 		04853DDB29A5F1640075D35F /* CTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04853DDA29A5F1640075D35F /* CTextField.swift */; };
 		04853DDD29A6077E0075D35F /* UserSocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04853DDC29A6077E0075D35F /* UserSocketService.swift */; };
 		04AF613D29A62B65000DA717 /* UserSocketViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AF613C29A62B65000DA717 /* UserSocketViewModel.swift */; };
+		04AF614029A6F474000DA717 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AF613F29A6F474000DA717 /* Models.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +60,7 @@
 		04853DDA29A5F1640075D35F /* CTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CTextField.swift; sourceTree = "<group>"; };
 		04853DDC29A6077E0075D35F /* UserSocketService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSocketService.swift; sourceTree = "<group>"; };
 		04AF613C29A62B65000DA717 /* UserSocketViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSocketViewModel.swift; sourceTree = "<group>"; };
+		04AF613F29A6F474000DA717 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +94,7 @@
 		0431A04429991321000D5513 /* IosChatApp */ = {
 			isa = PBXGroup;
 			children = (
+				04AF613E29A6F465000DA717 /* models */,
 				0441540129A35B2D0057BA67 /* services */,
 				0431A05E299CE4C0000D5513 /* security */,
 				0431A05829991C38000D5513 /* viewmodel */,
@@ -192,6 +195,14 @@
 			path = common;
 			sourceTree = "<group>";
 		};
+		04AF613E29A6F465000DA717 /* models */ = {
+			isa = PBXGroup;
+			children = (
+				04AF613F29A6F474000DA717 /* Models.swift */,
+			);
+			path = models;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -289,6 +300,7 @@
 				04AF613D29A62B65000DA717 /* UserSocketViewModel.swift in Sources */,
 				04853DD729A5E1FD0075D35F /* NoItemView.swift in Sources */,
 				0431A054299913E5000D5513 /* ChatSocketService.swift in Sources */,
+				04AF614029A6F474000DA717 /* Models.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

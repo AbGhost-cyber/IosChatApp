@@ -7,12 +7,10 @@
 
 import Foundation
 
-enum TokenException: Error {
-    case notFound
-}
 enum ConnState {
     case connecting
     case connected
+    case updating
     case disconnected
     
     var text: String {
@@ -23,6 +21,8 @@ enum ConnState {
             return "Chats"
         case .disconnected:
             return "Disconnected"
+        case .updating:
+            return "Updating"
         }
     }
 }
@@ -31,6 +31,8 @@ enum ConnState {
 class UserSocketViewModel: ObservableObject {
     
     @Published var onlineStatus: ConnState = .disconnected
+    @Published var groups:[Group] = []
+    @Published var userMessage: String = ""
     
     private let userSocketService: UserSocketService
     
@@ -39,25 +41,48 @@ class UserSocketViewModel: ObservableObject {
     }
     
     private func updateUserStatus(isConnected: Bool) async {
-       await MainActor.run {
+        await MainActor.run {
             self.onlineStatus = isConnected ? .connected : .disconnected
         }
     }
     
-    @MainActor func connectToServer() async throws {
-        let defaults = UserDefaults.standard
-        guard let token = defaults.string(forKey: "token") else {
-            throw TokenException.notFound
-        }
+    func connectToServer() async throws {
         onlineStatus = .connecting
         do {
-            try await userSocketService.connectToServer(token: token, callback: { error in
+            onlineStatus = .updating
+            try await fetchGroups()
+            try await userSocketService.connectToServer { error in
                 Task {
                     await self.updateUserStatus(isConnected: error == nil)
                 }
-            })
+            }
         } catch {
-            print("an error occurred: \(error.localizedDescription)")
+            print("connectToServer: \(error.localizedDescription)")
         }
     }
+    
+  func fetchGroups() async throws {
+        do {
+           let groups = try await userSocketService.fetchGroups()
+            self.groups = groups
+        } catch {
+            print("fetchGroups: \(error.localizedDescription)")
+        }
+    }
+    
+    func createGroup(name: String, desc: String, icon: String)  async throws {
+        let isValid = !name.isEmpty && !desc.isEmpty && !icon.isEmpty
+        if !isValid {
+            self.userMessage = "required fields cannot be empty"
+            return
+        }
+        let request = CreateGroupRequest(groupName: name, groupDesc: desc, groupIcon: icon)
+        do {
+            try await userSocketService.createGroup(with: request)
+            try await fetchGroups()
+        } catch {
+            print("createGroup: \(error.localizedDescription)")
+        }
+    }
+    
 }
