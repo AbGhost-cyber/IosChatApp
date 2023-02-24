@@ -10,10 +10,14 @@ import SwiftUI
 struct NoItemView: View {
     var text: String = "No data available"
     var body: some View {
-        Text(text)
-            .font(.secondaryText)
-            .foregroundColor(Color(uiColor: .secondaryLabel))
-            .multilineTextAlignment(.center)
+        ZStack {
+            Rectangle().fill(Color.primary.opacity(0.1))
+                .ignoresSafeArea(.all)
+            Text(text)
+                .font(.secondaryText)
+                .foregroundColor(Color(uiColor: .secondaryLabel))
+                .multilineTextAlignment(.center)
+        }
     }
 }
 

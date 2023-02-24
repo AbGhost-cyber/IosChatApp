@@ -91,3 +91,50 @@ extension URLResponse {
         return httpResponse.statusCode
     }
 }
+
+extension URLRequest {
+    static func requestWithToken(url: URL, addAppHeader: Bool = false) throws -> URLRequest {
+        var request = URLRequest(url: url)
+        let defaults = UserDefaults.standard
+        guard let token = defaults.string(forKey: "token") else {
+            throw ServiceError.tokenNotFound
+        }
+        let authValue = "Bearer \(token)"
+        request.timeoutInterval = 5
+        request.setValue(authValue, forHTTPHeaderField: "Authorization")
+        if addAppHeader {
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        }
+        return request
+    }
+}
+
+extension URL {
+    static func getUrlString(urlString: String) throws -> URL {
+        guard let url = URL(string: urlString) else {
+            throw ServiceError.invalidURL
+        }
+        return url
+    }
+}
+
+extension Sequence {
+    func concurrentForEach(
+        _ operation: @escaping (Element) async throws -> Void
+    ) async {
+        // A task group automatically waits for all of its
+        // sub-tasks to complete, while also performing those
+        // tasks in parallel:
+        await withTaskGroup(of: Void.self) { group in
+            for element in self {
+                group.addTask {
+                    do {
+                       try await operation(element)
+                    } catch {
+                        print("error performing task: \(error.localizedDescription)")
+                    }
+                }
+            }
+        }
+    }
+}

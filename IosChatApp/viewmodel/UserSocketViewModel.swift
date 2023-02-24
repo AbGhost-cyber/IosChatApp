@@ -35,9 +35,12 @@ class UserSocketViewModel: ObservableObject {
     @Published var userMessage: String = ""
     
     private let userSocketService: UserSocketService
+    private let chatService: ChatService
     
-    init(userSocketService: UserSocketService = UserSocketImpl()) {
+    init(userSocketService: UserSocketService = UserSocketImpl(),
+         chatService: ChatService = ChatServiceImpl()) {
         self.userSocketService = userSocketService
+        self.chatService = chatService
     }
     
     private func updateUserStatus(isConnected: Bool) async {
@@ -49,24 +52,43 @@ class UserSocketViewModel: ObservableObject {
     func connectToServer() async throws {
         onlineStatus = .connecting
         do {
-            onlineStatus = .updating
-            try await fetchGroups()
-            try await userSocketService.connectToServer { error in
-                Task {
-                    await self.updateUserStatus(isConnected: error == nil)
-                }
-            }
+             try await fetchGroups()
+            onlineStatus = .connected
+//            try await userSocketService.connectToServer { error in
+//                Task {
+//                    try await self.fetchGroups()
+//                }
+//                Task {
+//                    await self.updateUserStatus(isConnected: error == nil)
+//                }
+//            }
         } catch {
             print("connectToServer: \(error.localizedDescription)")
+            onlineStatus = .disconnected
         }
     }
     
-  func fetchGroups() async throws {
+    func fetchGroups() async throws {
         do {
-           let groups = try await userSocketService.fetchGroups()
+            let groups = try await userSocketService.fetchGroups()
             self.groups = groups
+            if groups.isEmpty { return }
+            self.groups.forEach { group in
+                Task {
+                    do {
+                        try await self.chatService.openGroupSocket(with: group.groupId)
+                    } catch {
+                        print("fishy: \(error.localizedDescription)")
+                    }
+                }
+            }
+//            await groups.concurrentForEach { group in
+//                try await self.chatService.openGroupSocket(with: group.groupId)
+//            }
+            print("called")
         } catch {
             print("fetchGroups: \(error.localizedDescription)")
+            onlineStatus = .disconnected
         }
     }
     

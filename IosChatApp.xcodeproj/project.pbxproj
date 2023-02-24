@@ -32,6 +32,7 @@
 		04853DDD29A6077E0075D35F /* UserSocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04853DDC29A6077E0075D35F /* UserSocketService.swift */; };
 		04AF613D29A62B65000DA717 /* UserSocketViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AF613C29A62B65000DA717 /* UserSocketViewModel.swift */; };
 		04AF614029A6F474000DA717 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AF613F29A6F474000DA717 /* Models.swift */; };
+		04AF614229A7BA9E000DA717 /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AF614129A7BA9E000DA717 /* ChatService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +62,7 @@
 		04853DDC29A6077E0075D35F /* UserSocketService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSocketService.swift; sourceTree = "<group>"; };
 		04AF613C29A62B65000DA717 /* UserSocketViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSocketViewModel.swift; sourceTree = "<group>"; };
 		04AF613F29A6F474000DA717 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		04AF614129A7BA9E000DA717 /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,7 +102,7 @@
 				0431A05829991C38000D5513 /* viewmodel */,
 				0441540429A372BC0057BA67 /* views */,
 				0431A04529991321000D5513 /* IosChatAppApp.swift */,
-				0441540D29A38B150057BA67 /* extensions */,
+				0441540D29A38B150057BA67 /* extensions+utils */,
 				0431A04929991324000D5513 /* Assets.xcassets */,
 				0431A04B29991324000D5513 /* Preview Content */,
 			);
@@ -140,6 +142,7 @@
 			children = (
 				0441540229A35B4E0057BA67 /* AuthService.swift */,
 				04853DDC29A6077E0075D35F /* UserSocketService.swift */,
+				04AF614129A7BA9E000DA717 /* ChatService.swift */,
 			);
 			path = services;
 			sourceTree = "<group>";
@@ -168,12 +171,12 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
-		0441540D29A38B150057BA67 /* extensions */ = {
+		0441540D29A38B150057BA67 /* extensions+utils */ = {
 			isa = PBXGroup;
 			children = (
 				0441540E29A38B210057BA67 /* Extension.swift */,
 			);
-			path = extensions;
+			path = "extensions+utils";
 			sourceTree = "<group>";
 		};
 		0441541429A46AF20057BA67 /* auth */ = {
@@ -283,6 +286,7 @@
 			files = (
 				0441540F29A38B210057BA67 /* Extension.swift in Sources */,
 				04853DD429A5DD730075D35F /* HomeView.swift in Sources */,
+				04AF614229A7BA9E000DA717 /* ChatService.swift in Sources */,
 				04853DD029A5BB3C0075D35F /* ButtonLabel.swift in Sources */,
 				0441540629A372F10057BA67 /* SignupView.swift in Sources */,
 				0431A04829991321000D5513 /* ContentView.swift in Sources */,
