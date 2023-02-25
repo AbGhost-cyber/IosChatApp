@@ -8,36 +8,33 @@
 import Foundation
 
 protocol UserSocketService {
-    func connectToServer(callback: @escaping(Error?)-> Void) async throws
-    //fetch groups, fetch group messages, decrypt
     func fetchGroups() async throws -> [Group]
+    func openGroupSocket(with id: String, callback: @escaping(Error?)-> Void) async throws
     func createGroup(with request: CreateGroupRequest) async throws
-    func connectToGroupChat(with id: String) async throws
+    func onGroupChange(callback: @escaping(Group) -> Void) async
 }
-
 
 class UserSocketImpl: UserSocketService {
     
     private var webSocketTask: URLSessionWebSocketTask?
     private let session: URLSession = .shared
+    private var groupCallback: ((Group) -> Void)?
     
-    func connectToServer(callback: @escaping(Error?)-> Void ) async throws {
-        let url = try URL.getUrlString(urlString: EndPoints.InitConnect.url)
-        let request = try URLRequest.requestWithToken(url: url)
-        webSocketTask = session.webSocketTask(with: request)
+    func openGroupSocket(with id: String, callback: @escaping(Error?)-> Void) async throws {
+        let url = try URL.getUrlString(urlString: EndPoints.groupChat(id: id).url)
+        let urlRequest = try URLRequest.requestWithToken(url: url)
+        webSocketTask = session.webSocketTask(with: urlRequest)
         webSocketTask?.resume()
-        try await onReceive()
         sendPing { error in
-            if error != nil {
-                //retry silently
-                Task {
-                    try await self.connectToServer(callback: callback)
-                }
-            }
             callback(error)
         }
+        try await onReceiveData()
     }
+
     
+    func onGroupChange(callback: @escaping(Group) -> Void) async {
+        groupCallback = callback
+    }
     
     func fetchGroups() async throws -> [Group] {
         let url = try URL.getUrlString(urlString: EndPoints.UserGroups.url)
@@ -55,28 +52,40 @@ class UserSocketImpl: UserSocketService {
         urlRequest.httpMethod = "POST"
         urlRequest.httpBody = try JSONEncoder().encode(request)
         let (data, _) = try await session.data(for: urlRequest)
-        print("create group: \(String(data: data, encoding: .utf8))")
+        print("create group: \(String(data: data, encoding: .utf8) ?? "not created")")
     }
     
-    func connectToGroupChat(with id: String) async throws {
-        let url = try URL.getUrlString(urlString: EndPoints.groupChat(id: id).url)
-        let urlRequest = try URLRequest.requestWithToken(url: url)
-        webSocketTask = session.webSocketTask(with: urlRequest)
-        webSocketTask?.resume()
-        try await onReceive()
-    }
     
-    func onReceive() async throws {
-        let webSocketMessage = try await webSocketTask?.receive()
-        if case .string(let data) = webSocketMessage {
-            print("data: \(data)")
-        }
+   private func onReceiveData() async throws {
+       var isActive = true
+       while isActive && webSocketTask?.closeCode == .invalid {
+           do {
+               let webSocketMessage = try await webSocketTask?.receive()
+               if case .string(let dataJson) = webSocketMessage {
+                   guard let data  = dataJson.data(using: .utf8) else { return }
+                   
+                   if let result = try? JSONDecoder().decode(WebResponse.self, from: data) {
+                       if case .groupResponse(let group) = result {
+                           guard let groupCallback = groupCallback else { return }
+                           groupCallback(group)
+                       }
+                       if case .simpleResponse(let response) = result {
+                           print("simple response: \(response)")
+                       }
+                   }else {
+                       print("couldnt decode")
+                   }
+               }
+           } catch {
+               print("on receive failed: \(error.localizedDescription)")
+               isActive = false
+           }
+       }
     }
     
     func sendPing(callback: @escaping(Error?) -> Void) {
         webSocketTask?.sendPing(pongReceiveHandler: callback)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
-            print("sent")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
             self.sendPing(callback: callback)
         }
     }

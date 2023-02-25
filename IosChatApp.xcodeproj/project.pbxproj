@@ -32,7 +32,8 @@
 		04853DDD29A6077E0075D35F /* UserSocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04853DDC29A6077E0075D35F /* UserSocketService.swift */; };
 		04AF613D29A62B65000DA717 /* UserSocketViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AF613C29A62B65000DA717 /* UserSocketViewModel.swift */; };
 		04AF614029A6F474000DA717 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AF613F29A6F474000DA717 /* Models.swift */; };
-		04AF614229A7BA9E000DA717 /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AF614129A7BA9E000DA717 /* ChatService.swift */; };
+		04AF614429A9CAA4000DA717 /* GroupChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AF614329A9CAA4000DA717 /* GroupChatView.swift */; };
+		04AF614629A9CBD2000DA717 /* GroupIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AF614529A9CBD2000DA717 /* GroupIcon.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,7 +63,8 @@
 		04853DDC29A6077E0075D35F /* UserSocketService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSocketService.swift; sourceTree = "<group>"; };
 		04AF613C29A62B65000DA717 /* UserSocketViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSocketViewModel.swift; sourceTree = "<group>"; };
 		04AF613F29A6F474000DA717 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
-		04AF614129A7BA9E000DA717 /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
+		04AF614329A9CAA4000DA717 /* GroupChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupChatView.swift; sourceTree = "<group>"; };
+		04AF614529A9CBD2000DA717 /* GroupIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupIcon.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,7 +144,6 @@
 			children = (
 				0441540229A35B4E0057BA67 /* AuthService.swift */,
 				04853DDC29A6077E0075D35F /* UserSocketService.swift */,
-				04AF614129A7BA9E000DA717 /* ChatService.swift */,
 			);
 			path = services;
 			sourceTree = "<group>";
@@ -158,6 +159,7 @@
 				0441541729A472E70057BA67 /* ViewHolder.swift */,
 				04853DD329A5DD730075D35F /* HomeView.swift */,
 				04853DD829A5E8B80075D35F /* CreateGroupView.swift */,
+				04AF614329A9CAA4000DA717 /* GroupChatView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -194,6 +196,7 @@
 			children = (
 				04853DD629A5E1FD0075D35F /* NoItemView.swift */,
 				04853DDA29A5F1640075D35F /* CTextField.swift */,
+				04AF614529A9CBD2000DA717 /* GroupIcon.swift */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -286,9 +289,9 @@
 			files = (
 				0441540F29A38B210057BA67 /* Extension.swift in Sources */,
 				04853DD429A5DD730075D35F /* HomeView.swift in Sources */,
-				04AF614229A7BA9E000DA717 /* ChatService.swift in Sources */,
 				04853DD029A5BB3C0075D35F /* ButtonLabel.swift in Sources */,
 				0441540629A372F10057BA67 /* SignupView.swift in Sources */,
+				04AF614429A9CAA4000DA717 /* GroupChatView.swift in Sources */,
 				0431A04829991321000D5513 /* ContentView.swift in Sources */,
 				04853DDD29A6077E0075D35F /* UserSocketService.swift in Sources */,
 				0431A04629991321000D5513 /* IosChatAppApp.swift in Sources */,
@@ -298,6 +301,7 @@
 				04853DDB29A5F1640075D35F /* CTextField.swift in Sources */,
 				0431A060299CE4D1000D5513 /* Security.swift in Sources */,
 				0441541A29A484C80057BA67 /* AuthViewModel.swift in Sources */,
+				04AF614629A9CBD2000DA717 /* GroupIcon.swift in Sources */,
 				0441540829A38A0A0057BA67 /* WelcomeUserView.swift in Sources */,
 				04853DD929A5E8B80075D35F /* CreateGroupView.swift in Sources */,
 				0441541629A46B050057BA67 /* LoginView.swift in Sources */,

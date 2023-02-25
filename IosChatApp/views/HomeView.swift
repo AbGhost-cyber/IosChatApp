@@ -17,15 +17,18 @@ struct HomeView: View {
                 Rectangle().fill(Color.primary.opacity(0.1))
                     .ignoresSafeArea(.all)
                 List {
-                    ForEach(userSocketVm.groups) { group in
+                    let sortedGroups = userSocketVm.groups
+                        .sorted(by: {$0.updatedTime > $1.updatedTime})
+                    ForEach(sortedGroups) { group in
                         NavigationLink {
-                            Text("Hi")
+                            GroupChatView(group: group)
                         } label: {
                             chatRowView(group: group)
                         }
                     }
                     .listRowBackground(Color.clear)
                 }
+                
                 .scrollContentBackground(.hidden)
                 .listStyle(.plain)
                 .toolbar {
@@ -52,7 +55,10 @@ struct HomeView: View {
                 )
                 .onAppear {
                     Task {
-                        try await userSocketVm.connectToServer()
+                        try await userSocketVm.fetchGroups()
+                    }
+                    Task {
+                        await userSocketVm.listenForMessages()
                     }
                 }
             }
@@ -86,23 +92,30 @@ struct HomeView: View {
         }
     }
     
+    func getMessageToDisplay(for group: Group) -> String {
+        var messageToDisplay = ""
+        if let lastMessage = group.messages.last {
+            messageToDisplay = "\(lastMessage.name): \(lastMessage.message)"
+        }
+        if messageToDisplay.isEmpty {
+            return "no messages yet"
+        }
+        return messageToDisplay
+    }
+    
     @ViewBuilder
     private func chatRowView(group: Group) -> some View {
         HStack {
-            Circle()
-                .fill(Color.mint)
-                .frame(width: 65, height: 65)
-                .overlay {
-                    Text(group.groupIcon)
-                        .font(.groupIconMini)
-                        .lineLimit(1)
-                        .foregroundColor(.primary)
-                }
+            GroupIcon(
+                size: 65,
+                icon: group.groupIcon,
+                font: .groupIconMini
+            )
             VStack(alignment: .leading, spacing: 4) {
                 Text(group.groupName)
                     .lineLimit(1)
                     .font(.primaryBold)
-                Text("Joe: Thanks my bro")
+                Text(getMessageToDisplay(for: group))
                     .font(.secondaryMedium)
                     .lineLimit(1)
                     .foregroundColor(.gray)
