@@ -1,6 +1,5 @@
 import UIKit
 import CryptoSwift
-import Starscream
 
 class Security {
     private var userCredentials: Dictionary<String, BigUInteger> = [:]
@@ -40,6 +39,13 @@ class Security {
     }
 }
 
+//let userSecretKey = try RSA(keySize: 1024)
+//let ss = try userSecretKey.encrypt("1234".bytes)
+//let bytess = try userSecretKey.externalRepresentation().bytes.toBase64()
+//let mm = try RSA(rawRepresentation: Data(base64Encoded: bytess, options: .init(rawValue: 0))!)
+//let dd = try mm.decrypt(ss)
+//let result = String(data: Data(dd), encoding: .utf8)
+//print(result ?? "none")
 
 //let sec = Security()
 //let data  = try RSA(keySize: 1024).publicKeyExternalRepresentation().bytes

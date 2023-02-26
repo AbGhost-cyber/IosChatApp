@@ -144,3 +144,15 @@ extension Sequence {
         }
     }
 }
+
+extension String {
+    func toBase64() -> String {
+        return Data(self.utf8).base64EncodedString()
+    }
+    func fromBase64() -> String? {
+        if let data  = Data(base64Encoded: self, options: Data.Base64DecodingOptions(rawValue: 0)) {
+            return String(data: data, encoding: .utf8)
+        }
+        return nil
+    }
+}
