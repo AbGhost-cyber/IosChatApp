@@ -28,7 +28,11 @@ struct HomeView: View {
                     }
                     .listRowBackground(Color.clear)
                 }
-                
+                .navigationDestination(isPresented: $userSocketVm.navigateToCreatedGroup) {
+                    if let group = userSocketVm.createdGroup {
+                        GroupChatView(group: group)
+                    }
+                }
                 .scrollContentBackground(.hidden)
                 .listStyle(.plain)
                 .toolbar {
@@ -45,7 +49,6 @@ struct HomeView: View {
                         NoItemView(text: "groups you've joined will appear here!")
                     }
                 }
-                
                 .sheet(isPresented: $showCreateGroupSheet) {
                     CreateGroupView(userVm: userSocketVm)
                 }

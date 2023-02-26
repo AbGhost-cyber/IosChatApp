@@ -17,15 +17,20 @@ enum SecurityException: Error {
     case userPrivateKeyNotFound
     case userPkeyEmpty
     case adminRSAEncryptEmpty
+    case alreadyGenPublicKey
+    case msgEncryptError
+    case msgDecryptError
 }
 protocol Security {
     func fetchKeyByGroupId(_ id: String) throws -> String
     func updateKeyByGroupId(_ id: String) throws
     func generateKeyForGroup(with id: String)
-    func generateUserRSAPrivateKeyForGroup(with id: String) throws
+    func generateUserRSAPrivateKeyForGroup(with id: String) throws -> [UInt8]
     func fetchUserRSAPrivateKeyForGroup(with id: String) throws -> Data
     func exchangeGroupkeyAsymmetric(with groupId: String, and userPublicKey: [UInt8]) throws -> [UInt8]
     func decryptAdminSymmetryForUser(with encryptedGroupKey: [UInt8], and groupId: String) throws -> String
+    func encryptMessage(_ text: String, for groupId: String) throws -> String
+    func decryptMessage(_ text: String, for groupId: String) throws -> String
 }
 
 class SecurityImpl: Security {
@@ -58,6 +63,7 @@ class SecurityImpl: Security {
         userCredentials[id] = encryptedGroupKey
         // save changes to user defaults
         userDefaults.set(userCredentials, forKey: secKey)
+        print("key generated: \(encryptedGroupKey)")
     }
     
    private func groupCredExists(id: String) -> Bool {
@@ -68,7 +74,8 @@ class SecurityImpl: Security {
         return userRSAPrivateKeys.keys.contains(where: {$0 == id})
     }
     
-    //only the admin can call this function
+    //both admin and user can call this function to fetch symmetric key for group
+    //using this key we can now encrypt and decrypt group messages
     func fetchKeyByGroupId(_ id: String) throws -> String {
         //check if group doesn't exist
         if !groupCredExists(id: id) {
@@ -105,18 +112,22 @@ class SecurityImpl: Security {
         return encryptedResult
     }
     
-    func generateUserRSAPrivateKeyForGroup(with id: String) throws {
+    //called when the user wants to join the group, sends this with the request
+    func generateUserRSAPrivateKeyForGroup(with id: String) throws ->[UInt8] {
         let userSecretKey = try RSA(keySize: 1024)
         if rsaKeyForGroup(id: id) {
-            return
+            throw SecurityException.alreadyGenPublicKey
         }
         let encryptedUserSecretKey = try userSecretKey.externalRepresentation().bytes.toBase64()
         userRSAPrivateKeys[id] = encryptedUserSecretKey
         
         // save changes to user defaults
         userDefaults.set(userRSAPrivateKeys, forKey: rsaKeys)
+        
+        return try userSecretKey.publicKeyExternalRepresentation().bytes
     }
     
+    //fetch user's RSA private key for group, will be called once to decrypt
     func fetchUserRSAPrivateKeyForGroup(with id: String) throws -> Data {
         if !rsaKeyForGroup(id: id) {
             throw SecurityException.userPrivateKeyNotFound
@@ -139,6 +150,34 @@ class SecurityImpl: Security {
             return groupSymmetricKey
         }
         throw SecurityException.userGroupKeyDecryptError
+    }
+    
+    // encrypt our message using group symmetric key
+    func encryptMessage(_ text: String, for groupId: String) throws -> String {
+        let groupSymmetricKey = try fetchKeyByGroupId(groupId)
+        let iv = AES.randomIV(AES.blockSize)
+        let aes = try AES(key: groupSymmetricKey.bytes, blockMode: CBC(iv: iv), padding: .pkcs7)
+        let encrypt = try aes.encrypt(text.bytes)
+        if let cipherStr = String(data: Data(encrypt), encoding: .utf8) {
+            return cipherStr
+        }
+        throw SecurityException.msgEncryptError
+    }
+    //decrypt our message using group symmetric key
+    func decryptMessage(_ text: String, for groupId: String) throws -> String {
+        let groupSymmetricKey = try fetchKeyByGroupId(groupId)
+        let iv = AES.randomIV(AES.blockSize)
+        let aes = try AES(key: groupSymmetricKey.bytes, blockMode: CBC(iv: iv), padding: .pkcs7)
+        
+        guard let data = text.data(using: .utf8) else {
+            throw SecurityException.msgDecryptError
+        }
+        
+        let decrypt = try aes.decrypt(data.bytes)
+        if let decipherStr = String(data: Data(decrypt), encoding: .utf8) {
+            return decipherStr
+        }
+        throw SecurityException.msgDecryptError
     }
 }
 

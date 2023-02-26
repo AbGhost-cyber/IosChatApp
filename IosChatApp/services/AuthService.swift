@@ -16,6 +16,7 @@ enum ServiceError: Error {
     case httpStatusCodeFailed(statusCode: Int, error: Error?)
     case unknownError
     case tokenNotFound
+    case decodingError
 }
 
 protocol AuthService {

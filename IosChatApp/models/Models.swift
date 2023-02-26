@@ -8,7 +8,15 @@
 import Foundation
 
 // to create group
-struct Group: Codable, Identifiable {
+struct Group: Codable, Identifiable, Hashable {
+    static func == (lhs: Group, rhs: Group) -> Bool {
+        return lhs.groupId == rhs.groupId
+    }
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(groupId)
+    }
+    
+    
     let groupId: String
     let groupIcon: String
     let groupName: String

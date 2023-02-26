@@ -12,6 +12,7 @@ struct CreateGroupView: View {
     @State private var groupName = ""
     @State private var groupDesc = ""
     @ObservedObject var userVm: UserSocketViewModel
+    @State var isClicked = false
     
     var body: some View {
         NavigationStack {
@@ -61,23 +62,29 @@ struct CreateGroupView: View {
                     }.foregroundColor(.primary)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Create") {
+                    Button {
+                        isClicked = true
                         Task {
                             try await userVm.createGroup(
                                 name: groupName,
                                 desc: groupDesc,
                                 icon: groupIcon
                             )
-                            //maybe check api sucess before dismiss
-                            dismiss()
+                        }
+                        isClicked = false
+                        dismiss()
+                    } label: {
+                        if isClicked {
+                            ProgressView()
+                        } else {
+                            Text("Create")
+                                .foregroundColor(.accentColor)
                         }
                     }
                 }
             }
             .navigationTitle("New Group")
             .navigationBarTitleDisplayMode(.inline)
-            .onAppear {
-            }
         }
     }
     private var userView: some View {

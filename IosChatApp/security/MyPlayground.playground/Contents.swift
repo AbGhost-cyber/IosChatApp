@@ -46,7 +46,15 @@ class Security {
 //let dd = try mm.decrypt(ss)
 //let result = String(data: Data(dd), encoding: .utf8)
 //print(result ?? "none")
-
+//let groupSymmetricKey = "keykeykeykeykeyk"
+//let iv = AES.randomIV(AES.blockSize)
+//let aes = try AES(key: groupSymmetricKey.bytes, blockMode: CBC(iv: iv), padding: .pkcs7)
+//let cipheredMessage = try aes.encrypt("hello".bytes)
+//let str = Data(cipheredMessage)
+//print()
+//
+//let decrypt = try aes.decrypt(str.bytes)
+//print(String(data: Data(decrypt), encoding: .utf8))
 //let sec = Security()
 //let data  = try RSA(keySize: 1024).publicKeyExternalRepresentation().bytes
 //print(data)

@@ -10,7 +10,7 @@ import Foundation
 protocol UserSocketService {
     func fetchGroups() async throws -> [Group]
     func openGroupSocket(with id: String, callback: @escaping(Error?)-> Void) async throws
-    func createGroup(with request: CreateGroupRequest) async throws
+    func createGroup(with request: CreateGroupRequest) async throws -> Group
     func onGroupChange(callback: @escaping(Group) -> Void) async
 }
 
@@ -43,16 +43,19 @@ class UserSocketImpl: UserSocketService {
         if let groups = try? JSONDecoder().decode([Group].self, from: data) {
             return groups
         }
-        throw ServiceError.unknownError
+        throw ServiceError.decodingError
     }
     
-    func createGroup(with request: CreateGroupRequest) async throws {
+    func createGroup(with request: CreateGroupRequest) async throws -> Group {
         let url = try URL.getUrlString(urlString: EndPoints.UserGroups.url)
         var urlRequest = try URLRequest.requestWithToken(url: url, addAppHeader: true)
         urlRequest.httpMethod = "POST"
         urlRequest.httpBody = try JSONEncoder().encode(request)
         let (data, _) = try await session.data(for: urlRequest)
-        print("create group: \(String(data: data, encoding: .utf8) ?? "not created")")
+        if let group = try? JSONDecoder().decode(Group.self, from: data) {
+            return group
+        }
+        throw ServiceError.decodingError
     }
     
     
