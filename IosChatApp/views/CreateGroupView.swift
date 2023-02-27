@@ -12,7 +12,7 @@ struct CreateGroupView: View {
     @State private var groupName = ""
     @State private var groupDesc = ""
     @ObservedObject var userVm: UserSocketViewModel
-    @State var isClicked = false
+    @State private var isClicked = false
     
     var body: some View {
         NavigationStack {
@@ -62,27 +62,23 @@ struct CreateGroupView: View {
                     }.foregroundColor(.primary)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        isClicked = true
-                        Task {
-                            try await userVm.createGroup(
-                                name: groupName,
-                                desc: groupDesc,
-                                icon: groupIcon
-                            )
-                        }
-                        isClicked = false
-                        dismiss()
-                    } label: {
-                        if isClicked {
-                            ProgressView()
-                        } else {
-                            Text("Create")
-                                .foregroundColor(.accentColor)
-                        }
-                    }
+                    AsyncButton(action: {
+                        try await userVm.createGroup(
+                            name: groupName,
+                            desc: groupDesc,
+                            icon: groupIcon)
+                    }, label: {
+                        Text("Create")
+                    })
+                    .disabled(groupDesc.isEmpty || groupIcon.isEmpty || groupName.isEmpty)
                 }
             }
+            .alert("Group Create Error ❌", isPresented: $userVm.hasError, actions: {
+                Button("OK", role: .cancel) {}
+            }, message: {
+                Text(userVm.userMessage)
+                    .font(.secondaryText)
+            })
             .navigationTitle("New Group")
             .navigationBarTitleDisplayMode(.inline)
         }

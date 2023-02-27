@@ -20,7 +20,7 @@ extension Font {
         boldFont(40)
     }
     static var groupIconMini2: Font {
-        boldFont(30)
+        boldFont(25)
     }
     static var signupTitle: Font {
         boldFont(27)
@@ -135,7 +135,7 @@ extension Sequence {
             for element in self {
                 group.addTask {
                     do {
-                       try await operation(element)
+                        try await operation(element)
                     } catch {
                         print("error performing task: \(error.localizedDescription)")
                     }
@@ -154,5 +154,26 @@ extension String {
             return String(data: data, encoding: .utf8)
         }
         return nil
+    }
+}
+
+extension AsyncButton {
+    enum ActionOption: CaseIterable {
+        case disableButton
+        case showProgressView
+    }
+}
+
+extension WelcomeUserView {
+    enum SheetAction: Identifiable {
+        case getStarted
+        case hasAccount
+        
+        var id: Int {
+            switch self {
+            case .getStarted: return 1
+            case .hasAccount: return 2
+            }
+        }
     }
 }

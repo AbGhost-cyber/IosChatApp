@@ -21,7 +21,10 @@ struct HomeView: View {
                         .sorted(by: {$0.updatedTime > $1.updatedTime})
                     ForEach(sortedGroups) { group in
                         NavigationLink {
-                            GroupChatView(group: group)
+                            GroupChatView(userVm: userSocketVm)
+                                .onAppear {
+                                    userSocketVm.selectedGroup = group
+                                }
                         } label: {
                             chatRowView(group: group)
                         }
@@ -29,8 +32,8 @@ struct HomeView: View {
                     .listRowBackground(Color.clear)
                 }
                 .navigationDestination(isPresented: $userSocketVm.navigateToCreatedGroup) {
-                    if let group = userSocketVm.createdGroup {
-                        GroupChatView(group: group)
+                    if userSocketVm.selectedGroup != nil {
+                        GroupChatView(userVm: userSocketVm)
                     }
                 }
                 .scrollContentBackground(.hidden)

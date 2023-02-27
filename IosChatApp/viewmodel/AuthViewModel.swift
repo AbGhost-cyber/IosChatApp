@@ -44,6 +44,7 @@ class AuthViewModel: ObservableObject {
             //save user token local
             if didSucceed {
                 defaults.set(response, forKey: "token")
+                defaults.set(username, forKey: "username")
             }
             self.didSucceedLogin = didSucceed
         } catch {

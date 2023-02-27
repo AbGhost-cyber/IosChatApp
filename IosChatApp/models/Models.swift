@@ -35,11 +35,17 @@ struct JoinRequest: Codable {
 }
 
 //this would change in the future, we will have two different, one for incoming and other for outgoing
-struct IncomingMessage: Codable, Identifiable {
+struct IncomingMessage: Codable, Identifiable, Hashable {
     let name: String
     let message: String
     let id: String
 }
+
+struct OutGoingMessage: Codable {
+    let message: String
+    let groupId: String
+}
+
 struct CreateGroupRequest: Codable {
     let groupName: String
     let groupDesc: String

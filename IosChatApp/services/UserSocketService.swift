@@ -9,9 +9,10 @@ import Foundation
 
 protocol UserSocketService {
     func fetchGroups() async throws -> [Group]
-    func openGroupSocket(with id: String, callback: @escaping(Error?)-> Void) async throws
+    func openGroupSocket(callback: @escaping(Error?)-> Void) async throws
     func createGroup(with request: CreateGroupRequest) async throws -> Group
     func onGroupChange(callback: @escaping(Group) -> Void) async
+    func sendMessage(text: String, groupId: String) async throws
 }
 
 class UserSocketImpl: UserSocketService {
@@ -19,9 +20,10 @@ class UserSocketImpl: UserSocketService {
     private var webSocketTask: URLSessionWebSocketTask?
     private let session: URLSession = .shared
     private var groupCallback: ((Group) -> Void)?
+    private var sockets: Dictionary<String, URLSessionWebSocketTask> = [:]
     
-    func openGroupSocket(with id: String, callback: @escaping(Error?)-> Void) async throws {
-        let url = try URL.getUrlString(urlString: EndPoints.groupChat(id: id).url)
+    func openGroupSocket(callback: @escaping(Error?)-> Void) async throws {
+        let url = try URL.getUrlString(urlString: EndPoints.groupChat.url)
         let urlRequest = try URLRequest.requestWithToken(url: url)
         webSocketTask = session.webSocketTask(with: urlRequest)
         webSocketTask?.resume()
@@ -56,6 +58,14 @@ class UserSocketImpl: UserSocketService {
             return group
         }
         throw ServiceError.decodingError
+    }
+    
+    func sendMessage(text: String, groupId: String) async throws {
+        let msg = OutGoingMessage(message: text, groupId: groupId)
+        let data = try JSONEncoder().encode(msg)
+        if let dataStr = String(data: data, encoding: .utf8) {
+            try await webSocketTask?.send(.string(dataStr))
+        }
     }
     
     

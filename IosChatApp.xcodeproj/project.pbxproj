@@ -34,6 +34,7 @@
 		04AF614029A6F474000DA717 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AF613F29A6F474000DA717 /* Models.swift */; };
 		04AF614429A9CAA4000DA717 /* GroupChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AF614329A9CAA4000DA717 /* GroupChatView.swift */; };
 		04AF614629A9CBD2000DA717 /* GroupIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AF614529A9CBD2000DA717 /* GroupIcon.swift */; };
+		04AF614829ABC063000DA717 /* AsyncButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AF614729ABC063000DA717 /* AsyncButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,6 +66,7 @@
 		04AF613F29A6F474000DA717 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		04AF614329A9CAA4000DA717 /* GroupChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupChatView.swift; sourceTree = "<group>"; };
 		04AF614529A9CBD2000DA717 /* GroupIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupIcon.swift; sourceTree = "<group>"; };
+		04AF614729ABC063000DA717 /* AsyncButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,6 +199,7 @@
 				04853DD629A5E1FD0075D35F /* NoItemView.swift */,
 				04853DDA29A5F1640075D35F /* CTextField.swift */,
 				04AF614529A9CBD2000DA717 /* GroupIcon.swift */,
+				04AF614729ABC063000DA717 /* AsyncButton.swift */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -296,6 +299,7 @@
 				04853DDD29A6077E0075D35F /* UserSocketService.swift in Sources */,
 				0431A04629991321000D5513 /* IosChatAppApp.swift in Sources */,
 				0431A05A29991C68000D5513 /* ChatViewModel.swift in Sources */,
+				04AF614829ABC063000DA717 /* AsyncButton.swift in Sources */,
 				0441541829A472E70057BA67 /* ViewHolder.swift in Sources */,
 				0441540329A35B4E0057BA67 /* AuthService.swift in Sources */,
 				04853DDB29A5F1640075D35F /* CTextField.swift in Sources */,

@@ -67,17 +67,3 @@ struct WelcomeUserView_Previews: PreviewProvider {
         WelcomeUserView(authVm: AuthViewModel())
     }
 }
-
-extension WelcomeUserView {
-    enum SheetAction: Identifiable {
-        case getStarted
-        case hasAccount
-        
-        var id: Int {
-            switch self {
-            case .getStarted: return 1
-            case .hasAccount: return 2
-            }
-        }
-    }
-}

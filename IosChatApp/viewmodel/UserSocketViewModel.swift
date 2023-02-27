@@ -35,7 +35,9 @@ class UserSocketViewModel: ObservableObject {
     @Published var groups:[Group] = []
     @Published var userMessage: String = ""
     @Published var navigateToCreatedGroup = false
-    @Published var createdGroup: Group? = nil
+    @Published var selectedGroup: Group? = nil
+    @Published var hasError = false
+    @Published var message: String = ""
     
     private let userSocketService: UserSocketService
     private let security: Security
@@ -65,11 +67,33 @@ class UserSocketViewModel: ObservableObject {
     func listenForMessages() async {
         await userSocketService.onGroupChange { group in
             Task {
+                guard let selectedGroup = self.selectedGroup else { return }
+                if group.groupId == selectedGroup.groupId {
+                    self.selectedGroup = group
+                }
               await self.upsertGroup(group)
             }
         }
     }
     
+    func sendMessage(with groupId: String) async throws {
+        if message.isEmpty {
+            return
+        }
+        do {
+           // let encryptedMsg = try security.encryptMessage(message, for: groupId)
+            try await userSocketService.sendMessage(text: message, groupId: groupId)
+            self.message = ""
+        } catch SecurityException.msgEncryptError {
+            print("couldn't encrypt msg for groupId: \(groupId)")
+        }
+    }
+    
+    
+    func getUserName() -> String {
+        let userDefaults = UserDefaults.standard
+       return userDefaults.string(forKey: "username") ?? ""
+    }
     
     
     func fetchGroups() async throws {
@@ -83,14 +107,12 @@ class UserSocketViewModel: ObservableObject {
             }
             onlineStatus = .updating
             
-            await groups.concurrentForEach { group in
-                try await self.userSocketService.openGroupSocket(with: group.groupId) { error in
-                    Task {
-                        await self.updateUserStatus(isConnected: error == nil)
-                    }
-                    if let error = error {
-                        print("ping: \(error.localizedDescription)")
-                    }
+            try await self.userSocketService.openGroupSocket() { error in
+                Task {
+                    await self.updateUserStatus(isConnected: error == nil)
+                }
+                if let error = error {
+                    print("ping: \(error.localizedDescription)")
                 }
             }
         } catch {
@@ -100,7 +122,6 @@ class UserSocketViewModel: ObservableObject {
     }
     
     func createGroup(name: String, desc: String, icon: String)  async throws {
-        print("create group")
         let isValid = !name.isEmpty && !desc.isEmpty && !icon.isEmpty
         if !isValid {
             self.userMessage = "required fields cannot be empty"
@@ -111,9 +132,12 @@ class UserSocketViewModel: ObservableObject {
             let newGroup = try await userSocketService.createGroup(with: request)
             security.generateKeyForGroup(with: newGroup.groupId)
             //try await fetchGroups()
-            self.createdGroup = newGroup
+            self.selectedGroup = newGroup
             self.navigateToCreatedGroup = true
+            self.hasError = false
         } catch {
+            self.userMessage = error.localizedDescription
+            self.hasError = true
             print("createGroup: \(error.localizedDescription)")
         }
     }

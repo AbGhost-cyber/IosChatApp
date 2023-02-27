@@ -31,8 +31,8 @@ extension EndPoints {
     static var UserGroups: EndPoints {
         EndPoints(url: "\(HTTP_URL)/group")
     }
-    static func groupChat(id: String) -> EndPoints {
-        return EndPoints(url: "\(SOCKET_URL)/group/\(id)/chat")
+    static var groupChat: EndPoints {
+        return EndPoints(url: "\(SOCKET_URL)/group/chat")
     }
 }
 
