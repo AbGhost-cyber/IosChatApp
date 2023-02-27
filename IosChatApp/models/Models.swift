@@ -25,7 +25,7 @@ struct Group: Codable, Identifiable, Hashable {
     let dateCreated: UInt64
     let users: [String]
     let requests: [JoinRequest]
-    let messages: [IncomingMessage]
+    var messages: [IncomingMessage]
     let id: String
     let updatedTime: Int
 }

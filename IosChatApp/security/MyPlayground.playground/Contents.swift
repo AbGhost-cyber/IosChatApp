@@ -1,43 +1,42 @@
 import UIKit
 import CryptoSwift
-
-class Security {
-    private var userCredentials: Dictionary<String, BigUInteger> = [:]
-    
-    // formula for RSA encryption = PLAINTEXT^PUBLIC KEY MOD PRODUCT
-    // the symmetric keys will be unique for each group created by admin
-    // the symmetric key will also be regenerated when a user joins or leaves the group
-    func exchangeGroupkeyAsymmetric(groupId: String, userPublicKey: [UInt8])-> [UInt8]? {
-        do {
-            if let groupSymmetricKey = try RSA(keySize: 40).d {
-                let adminImportsOfUserPublicKey = try RSA(rawRepresentation: Data(userPublicKey))
-                let encryptedResult = try adminImportsOfUserPublicKey.encrypt(String(groupSymmetricKey).bytes)
-                return encryptedResult
-            }
-            return nil
-        } catch {
-            print("couldn't generate symmetry key: \(error.localizedDescription)")
-        }
-        return nil
-    }
-    
-    func decryptAdminSymmetryForUser(encryptedGroupKey: [UInt8], groupId: String) -> BigUInteger? {
-        if encryptedGroupKey.isEmpty { return nil }
-        do {
-            let userSecretKey = try RSA(keySize: 1024)
-            let originalDecryptedData = try userSecretKey.decrypt(encryptedGroupKey)
-           if let stringValue = String(data: Data(originalDecryptedData), encoding: .utf8) {
-               let decryptedValue = BigUInteger(stringValue)
-                userCredentials[groupId] = decryptedValue
-               return decryptedValue
-           }
-            return nil
-        } catch {
-            
-        }
-        return nil
-    }
-}
+//class Security {
+//    private var userCredentials: Dictionary<String, BigUInteger> = [:]
+//
+//    // formula for RSA encryption = PLAINTEXT^PUBLIC KEY MOD PRODUCT
+//    // the symmetric keys will be unique for each group created by admin
+//    // the symmetric key will also be regenerated when a user joins or leaves the group
+//    func exchangeGroupkeyAsymmetric(groupId: String, userPublicKey: [UInt8])-> [UInt8]? {
+//        do {
+//            if let groupSymmetricKey = try RSA(keySize: 40).d {
+//                let adminImportsOfUserPublicKey = try RSA(rawRepresentation: Data(userPublicKey))
+//                let encryptedResult = try adminImportsOfUserPublicKey.encrypt(String(groupSymmetricKey).bytes)
+//                return encryptedResult
+//            }
+//            return nil
+//        } catch {
+//            print("couldn't generate symmetry key: \(error.localizedDescription)")
+//        }
+//        return nil
+//    }
+//
+//    func decryptAdminSymmetryForUser(encryptedGroupKey: [UInt8], groupId: String) -> BigUInteger? {
+//        if encryptedGroupKey.isEmpty { return nil }
+//        do {
+//            let userSecretKey = try RSA(keySize: 1024)
+//            let originalDecryptedData = try userSecretKey.decrypt(encryptedGroupKey)
+//           if let stringValue = String(data: Data(originalDecryptedData), encoding: .utf8) {
+//               let decryptedValue = BigUInteger(stringValue)
+//                userCredentials[groupId] = decryptedValue
+//               return decryptedValue
+//           }
+//            return nil
+//        } catch {
+//
+//        }
+//        return nil
+//    }
+//}
 
 //let userSecretKey = try RSA(keySize: 1024)
 //let ss = try userSecretKey.encrypt("1234".bytes)
@@ -137,5 +136,54 @@ class Security {
 //    }
 //}
 
+func encryptMessage(_ text: String, for groupId: String) throws -> [UInt8] {
+    print("trying encryption...")
+    let groupSymmetricKey = String(UUID().uuidString.dropLast(4))
+    print("fetched group key: \(groupSymmetricKey)")
+    let iv = AES.randomIV(AES.blockSize)
+    let aes = try AES(key: groupSymmetricKey.bytes, blockMode: CBC(iv: iv), padding: .zeroPadding)
+    print("encrypting...")
+    let encryptBytes = try aes.encrypt(Array(text.utf8))
 
+    return encryptBytes
+//    if let cipherStr = String(data: Data(encrypt), encoding: .utf8) {
+//        return cipherStr
+//    }
+//    throw SecurityException.msgEncryptError
+}
+
+func decrypt (bytes: [UInt8]) throws -> String {
+    let groupSymmetricKey = "CBE7736D-BB01-4F3F-BF71-1A31677F"
+    let iv = AES.randomIV(AES.blockSize)
+    let aes = try AES(key: groupSymmetricKey.bytes, blockMode: CBC(iv: iv), padding: .zeroPadding)
+    print("decrypting")
+    let decrypt = try aes.decrypt(bytes)
+//    let decrypted = String(bytes: aesD!, encoding: .utf8)
+//     print("AES decrypted: \(decrypted)")
+    if let decipherStr = String(bytes: decrypt, encoding: .utf8) {
+        return decipherStr
+    }
+    throw SecurityException.msgDecryptError
+}
 //print(value)
+//let en = try encryptMessage("hi, there", for: "")
+//print(en)
+////print(Data(base64Encoded: en, options: .init(rawValue: 0))?.bytes)
+//print(try decrypt(bytes: en))
+//print(String(UUID().uuidString.dropLast(4)))
+//print(String(UUID().uuidString.dropLast(4)))
+//Data(self.utf8).base64EncodedString()
+
+let ss = String(UUID().uuidString.dropLast(4)).toBase64()
+let real = ss.fromBase64()!
+print("real: \(real)")
+if let aes = try? AES(key: real, iv: "abdefdsrfjdirogf"),
+    let aesE = try? aes.encrypt(Array("testString".utf8)) {
+    print("AES encrypted: \(aesE.toHexString())")
+    
+    let aesD = try? aes.decrypt(Array(hex: aesE.toHexString()))
+    let decrypted = String(bytes: aesD!, encoding: .utf8)
+    print("AES decrypted: \(decrypted ?? "ok")")
+}else{
+    print("error")
+}

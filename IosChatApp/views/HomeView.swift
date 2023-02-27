@@ -17,7 +17,7 @@ struct HomeView: View {
                 Rectangle().fill(Color.primary.opacity(0.1))
                     .ignoresSafeArea(.all)
                 List {
-                    let sortedGroups = userSocketVm.groups
+                    let sortedGroups = userSocketVm.decryptedGroups
                         .sorted(by: {$0.updatedTime > $1.updatedTime})
                     ForEach(sortedGroups) { group in
                         NavigationLink {

@@ -67,6 +67,7 @@ struct CreateGroupView: View {
                             name: groupName,
                             desc: groupDesc,
                             icon: groupIcon)
+                        dismiss()
                     }, label: {
                         Text("Create")
                     })

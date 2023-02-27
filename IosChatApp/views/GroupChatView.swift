@@ -10,6 +10,7 @@ import SwiftUI
 struct GroupChatView: View {
     @ObservedObject var userVm: UserSocketViewModel
     @Environment(\.colorScheme) var colorScheme
+    @FocusState private var msgFieldIsFocused: Bool
     
     var body: some View {
         ZStack {
@@ -37,10 +38,11 @@ struct GroupChatView: View {
                             }
                         }
                     }
+                }.onTapGesture {
+                    msgFieldIsFocused = false
                 }
                 //MARK: chat message view
                 chatMessageView
-                    .padding()
             }
             .toolbar {
                 if let group = userVm.selectedGroup {
@@ -53,11 +55,15 @@ struct GroupChatView: View {
                             Text("\(group.users.count) members")
                                 .foregroundColor(.primary.opacity(0.5))
                                 .font(.secondaryText)
+                        }.onTapGesture {
+                            //TODO: will show group details later
                         }
                     }
                     
                     ToolbarItem {
-                        GroupIcon(size: 45, icon: group.groupIcon, font: .groupIconMini2)
+                        GroupIcon(size: 40, icon: group.groupIcon, font: .groupIconMini2)
+                            .padding(.bottom, 3)
+                            .padding(.trailing, -10)
                     }
                 }
             }
@@ -74,22 +80,28 @@ struct GroupChatView: View {
     }
     
     private var chatMessageView: some View {
-        HStack {
-            TextField("write a message", text: $userVm.message)
+        HStack(alignment: .bottom) {
+            TextField("write a message", text: $userVm.message, axis: .vertical)
+                .focused($msgFieldIsFocused)
                 .padding(10.0)
                 .font(.secondaryMedium)
                 .background(Color.secondary.opacity(0.2))
+                .cornerRadius(20.0)
+                .padding(.leading)
+                .padding(.top, 10)
             AsyncButton {
                 guard let group = userVm.selectedGroup else { return }
                 try await userVm.sendMessage(with: group.groupId)
             } label: {
-                Image(systemName: "paperplane.fill")
-                    .font(.system(size: 20))
+                Image(systemName: "arrow.up.circle.fill")
+                    .symbolRenderingMode(.multicolor)
+                    .font(.system(size: 30))
                     .padding(6.0)
             }
+            .padding(.trailing, 10)
             .disabled(userVm.message.isEmpty)
-
         }
+        .background(Color.secondary.opacity(0.2))
     }
     
     @ViewBuilder
@@ -116,46 +128,38 @@ struct GroupChatView: View {
                             }
                             .opacity(msgIsFromSameUser ? 0 : 1)
                     }
-                    VStack(alignment: isUser ? .trailing : .leading, spacing: 10) {
+                    VStack(alignment: .leading) {
                         if !msgIsFromSameUser {
-                            Text(isUser ? "you" : message.name)
-                                .font(.secondaryText)
+                            Text(isUser ? "You" : message.name.capitalized)
+                                .font(.secondaryBold)
                                 .foregroundColor(Color(uiColor: .secondaryLabel))
-                                .fontWeight(.thin)
-                                .offset(x: !isUser ? 10: -10)
+                                .padding([.trailing, .leading, .top])
                         }
                         Text(message.message)
                             .font(.secondaryMedium)
                             .frame(minWidth: 30, minHeight: 20)
-                            .padding()
-                            .background(isUser ? Color.accentColor : Color.clear)
+                            .padding(.top, msgIsFromSameUser ? 10: 0)
+                            .padding([.bottom, .trailing, .leading])
                             .foregroundColor(isUser ? .white : userColor)
-                            .cornerRadius(isUser ? 25 : 0)
                             .multilineTextAlignment(.leading)
-                            .overlay {
-                                if !isUser {
-                                    RoundedRectangle(cornerRadius: 25)
-                                        .stroke(Color.accentColor, lineWidth: 1.50)
-                                }
-                            }
+                        
                     }
-                    
-                    if isUser {
-                        Circle()
-                            .fill(Color.teal)
-                            .frame(width: 50)
-                            .overlay {
-                                Text(String(message.name.first!).capitalized)
-                                    .font(.title2)
-                            }
-                            .opacity(msgIsFromSameUser ? 0 : 1)
+                    .background(isUser ? Color.accentColor : Color.clear)
+                    .cornerRadius(isUser ? 25 : 0)
+                    .overlay {
+                        if !isUser {
+                            RoundedRectangle(cornerRadius: 25)
+                                .stroke(Color.accentColor, lineWidth: 1.50)
+                        }
                     }
                 }
             }
             .frame(maxWidth: .infinity, alignment: isUser ? .trailing : isNotification ? .center : .leading)
-            .padding([.top, .horizontal], msgIsFromSameUser ? -3: 30)
-            .padding(.trailing, msgIsFromSameUser ? 0: 10)
-            .padding(.leading, msgIsFromSameUser ? 10: 0)
+            .padding(.top, msgIsFromSameUser ? -3.0 : 10.0)
+            .padding([.leading, .trailing])
+//            .padding([.top, .horizontal], msgIsFromSameUser ? -3: 30)
+//            .padding(.trailing, msgIsFromSameUser ? 0: 10)
+//            .padding(.leading, msgIsFromSameUser ? 10: 0)
         }
     }
     

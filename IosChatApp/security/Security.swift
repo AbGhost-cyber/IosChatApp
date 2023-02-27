@@ -42,6 +42,8 @@ class SecurityImpl: Security {
     private var userCredentials: Dictionary<String, String> = [:]
     // holds user's request dec keys
     private var userRSAPrivateKeys: Dictionary<String, String> = [:]
+    //randomness
+    private var iv =  "abdefdsrfjdirogf"
     
     init() {
         loadData()
@@ -59,7 +61,7 @@ class SecurityImpl: Security {
         if groupCredExists(id: id) {
             return
         }
-        let encryptedGroupKey = UUID().uuidString.toBase64()
+        let encryptedGroupKey = String(UUID().uuidString.dropLast(4)).toBase64()
         userCredentials[id] = encryptedGroupKey
         // save changes to user defaults
         userDefaults.set(userCredentials, forKey: secKey)
@@ -152,29 +154,26 @@ class SecurityImpl: Security {
         throw SecurityException.userGroupKeyDecryptError
     }
     
+    
+    
     // encrypt our message using group symmetric key
     func encryptMessage(_ text: String, for groupId: String) throws -> String {
+        print("trying encryption...")
         let groupSymmetricKey = try fetchKeyByGroupId(groupId)
-        let iv = AES.randomIV(AES.blockSize)
-        let aes = try AES(key: groupSymmetricKey.bytes, blockMode: CBC(iv: iv), padding: .pkcs7)
-        let encrypt = try aes.encrypt(text.bytes)
-        if let cipherStr = String(data: Data(encrypt), encoding: .utf8) {
-            return cipherStr
-        }
-        throw SecurityException.msgEncryptError
+        print("fetched group key: \(groupSymmetricKey)")
+        let aes = try AES(key: groupSymmetricKey, iv: iv)
+        print("encrypting...")
+        let encrypt = try aes.encrypt(Array(text.utf8))
+        return encrypt.toHexString()
     }
     //decrypt our message using group symmetric key
     func decryptMessage(_ text: String, for groupId: String) throws -> String {
+        print("decrypting...")
         let groupSymmetricKey = try fetchKeyByGroupId(groupId)
-        let iv = AES.randomIV(AES.blockSize)
-        let aes = try AES(key: groupSymmetricKey.bytes, blockMode: CBC(iv: iv), padding: .pkcs7)
-        
-        guard let data = text.data(using: .utf8) else {
-            throw SecurityException.msgDecryptError
-        }
-        
-        let decrypt = try aes.decrypt(data.bytes)
-        if let decipherStr = String(data: Data(decrypt), encoding: .utf8) {
+        let aes = try AES(key: groupSymmetricKey, iv: iv)
+        let decrypt = try aes.decrypt(Array(hex: text))
+        if let decipherStr = String(bytes: decrypt, encoding: .utf8) {
+            print("deciphered: \(decipherStr)")
             return decipherStr
         }
         throw SecurityException.msgDecryptError

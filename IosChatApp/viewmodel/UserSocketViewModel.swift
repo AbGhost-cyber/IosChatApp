@@ -32,7 +32,12 @@ class UserSocketViewModel: ObservableObject {
     
     @Published var onlineStatus: ConnState = .disconnected
     //TODO: make sure that the new user can never receive messages earlier than the date he joined
-    @Published var groups:[Group] = []
+    @Published var groups:[Group] = [] {
+        didSet {
+            decryptAllMsgs()
+        }
+    }
+    @Published var decryptedGroups: [Group] = []
     @Published var userMessage: String = ""
     @Published var navigateToCreatedGroup = false
     @Published var selectedGroup: Group? = nil
@@ -70,6 +75,7 @@ class UserSocketViewModel: ObservableObject {
                 guard let selectedGroup = self.selectedGroup else { return }
                 if group.groupId == selectedGroup.groupId {
                     self.selectedGroup = group
+                    self.selectedGroup?.messages = self.decryptedGrpMsgs(for: group)
                 }
               await self.upsertGroup(group)
             }
@@ -81,8 +87,9 @@ class UserSocketViewModel: ObservableObject {
             return
         }
         do {
-           // let encryptedMsg = try security.encryptMessage(message, for: groupId)
-            try await userSocketService.sendMessage(text: message, groupId: groupId)
+            let encryptedMsg = try security.encryptMessage(message.trimmingCharacters(in: .whitespacesAndNewlines), for: groupId)
+            print("encryptedMsg: \(encryptedMsg)")
+            try await userSocketService.sendMessage(text: encryptedMsg, groupId: groupId)
             self.message = ""
         } catch SecurityException.msgEncryptError {
             print("couldn't encrypt msg for groupId: \(groupId)")
@@ -101,6 +108,7 @@ class UserSocketViewModel: ObservableObject {
         do {
             let groups = try await userSocketService.fetchGroups()
             self.groups = groups
+            //TODO: maybe this would be better if we save decrypted msgs to local
             if groups.isEmpty {
                 onlineStatus = .connected
                 return
@@ -130,8 +138,8 @@ class UserSocketViewModel: ObservableObject {
         let request = CreateGroupRequest(groupName: name, groupDesc: desc, groupIcon: icon)
         do {
             let newGroup = try await userSocketService.createGroup(with: request)
+            //generate symmetric key
             security.generateKeyForGroup(with: newGroup.groupId)
-            //try await fetchGroups()
             self.selectedGroup = newGroup
             self.navigateToCreatedGroup = true
             self.hasError = false
@@ -142,21 +150,31 @@ class UserSocketViewModel: ObservableObject {
         }
     }
     
-    func getGroupMsgs(for groupId: String) -> [IncomingMessage] {
+    func decryptedGrpMsgs(for group: Group) -> [IncomingMessage] {
         var messages: [IncomingMessage] = []
-        if let group = groups.first(where: {$0.groupId == groupId}) {
-            do {
-              messages = try group.messages.map { message in
-                    IncomingMessage (
-                        name: message.name,
-                        message: try security.decryptMessage(message.message, for: groupId),
-                        id: groupId )
-                }
-            } catch {
-                print("couldn't decrypt msg")
+        do {
+            for incoming in group.messages {
+                let decipheredMsg = try security.decryptMessage(incoming.message, for: group.groupId)
+                messages.append(IncomingMessage(name: incoming.name, message: decipheredMsg, id: incoming.id))
             }
+        } catch {
+            print("couldn't decrypt msg")
         }
         return messages
+    }
+    
+    func decryptAllMsgs() {
+        var mGroups = groups
+        if mGroups.isEmpty { return }
+        for index in mGroups.indices {
+            var group = mGroups[index]
+            group.messages = decryptedGrpMsgs(for: group)
+            mGroups[index] = group
+        }
+        self.decryptedGroups = mGroups
+    }
+    func decryptSingle() {
+        
     }
     
 }
