@@ -77,7 +77,7 @@ class UserSocketViewModel: ObservableObject {
                     self.selectedGroup = group
                     self.selectedGroup?.messages = self.decryptedGrpMsgs(for: group)
                 }
-              await self.upsertGroup(group)
+                await self.upsertGroup(group)
             }
         }
     }
@@ -99,7 +99,7 @@ class UserSocketViewModel: ObservableObject {
     
     func getUserName() -> String {
         let userDefaults = UserDefaults.standard
-       return userDefaults.string(forKey: "username") ?? ""
+        return userDefaults.string(forKey: "username") ?? ""
     }
     
     
@@ -135,7 +135,11 @@ class UserSocketViewModel: ObservableObject {
             self.userMessage = "required fields cannot be empty"
             return
         }
-        let request = CreateGroupRequest(groupName: name, groupDesc: desc, groupIcon: icon)
+        let request = CreateGroupRequest(
+            groupName: name.trimmingCharacters(in: .whitespacesAndNewlines),
+            groupDesc: desc.trimmingCharacters(in: .whitespacesAndNewlines),
+            groupIcon: icon
+        )
         do {
             let newGroup = try await userSocketService.createGroup(with: request)
             //generate symmetric key
@@ -173,8 +177,4 @@ class UserSocketViewModel: ObservableObject {
         }
         self.decryptedGroups = mGroups
     }
-    func decryptSingle() {
-        
-    }
-    
 }

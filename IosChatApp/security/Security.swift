@@ -18,7 +18,6 @@ enum SecurityException: Error {
     case userPkeyEmpty
     case adminRSAEncryptEmpty
     case alreadyGenPublicKey
-    case msgEncryptError
     case msgDecryptError
 }
 protocol Security {
@@ -155,17 +154,15 @@ class SecurityImpl: Security {
     }
     
     
-    
     // encrypt our message using group symmetric key
     func encryptMessage(_ text: String, for groupId: String) throws -> String {
         print("trying encryption...")
         let groupSymmetricKey = try fetchKeyByGroupId(groupId)
-        print("fetched group key: \(groupSymmetricKey)")
         let aes = try AES(key: groupSymmetricKey, iv: iv)
-        print("encrypting...")
         let encrypt = try aes.encrypt(Array(text.utf8))
         return encrypt.toHexString()
     }
+    
     //decrypt our message using group symmetric key
     func decryptMessage(_ text: String, for groupId: String) throws -> String {
         print("decrypting...")
@@ -173,7 +170,6 @@ class SecurityImpl: Security {
         let aes = try AES(key: groupSymmetricKey, iv: iv)
         let decrypt = try aes.decrypt(Array(hex: text))
         if let decipherStr = String(bytes: decrypt, encoding: .utf8) {
-            print("deciphered: \(decipherStr)")
             return decipherStr
         }
         throw SecurityException.msgDecryptError

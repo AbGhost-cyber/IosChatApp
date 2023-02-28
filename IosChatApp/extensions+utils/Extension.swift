@@ -34,6 +34,9 @@ extension Font {
     static var secondaryMedium: Font {
         regularFont(18)
     }
+    static var secondaryLarge: Font {
+        regularFont(23)
+    }
     static var primaryBold: Font {
         boldFont(18)
     }

@@ -3,6 +3,7 @@
 //  IosChatApp
 //
 //  Created by dremobaba on 2023/2/27.
+//  Reference URL: https://www.swiftbysundell.com/articles/building-an-async-swiftui-button/
 //
 
 import SwiftUI
@@ -32,6 +33,7 @@ struct AsyncButton<Label: View>: View {
                     }
                     try await Task.sleep(for: .seconds(1))
                     try await action()
+                    
                     progressViewTask?.cancel()
                     
                     isDisabled = false

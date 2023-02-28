@@ -48,15 +48,17 @@ struct GroupChatView: View {
                 if let group = userVm.selectedGroup {
                     
                     ToolbarItem(placement: .principal) {
-                        VStack(spacing: 3) {
-                            Text(group.groupName)
-                                .foregroundColor(.primary)
-                                .font(.primaryBold2)
-                            Text("\(group.users.count) members")
-                                .foregroundColor(.primary.opacity(0.5))
-                                .font(.secondaryText)
-                        }.onTapGesture {
-                            //TODO: will show group details later
+                        NavigationLink {
+                            GroupInfoView(userVm: userVm)
+                        } label: {
+                            VStack(spacing: 3) {
+                                Text(group.groupName)
+                                    .foregroundColor(.primary)
+                                    .font(.primaryBold2)
+                                Text("\(group.users.count) members")
+                                    .foregroundColor(.primary.opacity(0.5))
+                                    .font(.secondaryText)
+                            }
                         }
                     }
                     
@@ -70,6 +72,7 @@ struct GroupChatView: View {
 
         }
     }
+    
     private func scrollToLastMessage(proxy: ScrollViewProxy) {
         if let lastMessage = userVm.selectedGroup?.messages.last {
             withAnimation(.easeOut(duration: 0.4)) {
@@ -157,9 +160,6 @@ struct GroupChatView: View {
             .frame(maxWidth: .infinity, alignment: isUser ? .trailing : isNotification ? .center : .leading)
             .padding(.top, msgIsFromSameUser ? -3.0 : 10.0)
             .padding([.leading, .trailing])
-//            .padding([.top, .horizontal], msgIsFromSameUser ? -3: 30)
-//            .padding(.trailing, msgIsFromSameUser ? 0: 10)
-//            .padding(.leading, msgIsFromSameUser ? 10: 0)
         }
     }
     

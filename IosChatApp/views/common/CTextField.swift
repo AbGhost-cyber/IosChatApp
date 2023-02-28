@@ -11,10 +11,10 @@ struct CTextField: View {
     @Binding var value: String
     let hint: String
     var body: some View {
-        TextField(hint, text: $value)
+        TextField(hint, text: $value, axis: .vertical)
             .padding(10)
             .font(.secondaryMedium)
-            .frame(height: 60)
+            .frame(minHeight: 60)
             .background(Color(uiColor: .systemBackground))
             .cornerRadius(10.0)
     }

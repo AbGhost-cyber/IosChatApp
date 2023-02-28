@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		042CEFCC29AD8705007DAB6C /* GroupInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042CEFCB29AD8705007DAB6C /* GroupInfoView.swift */; };
+		042CEFCE29AE1416007DAB6C /* ExpandableText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042CEFCD29AE1416007DAB6C /* ExpandableText.swift */; };
 		0431A04629991321000D5513 /* IosChatAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431A04529991321000D5513 /* IosChatAppApp.swift */; };
 		0431A04829991321000D5513 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431A04729991321000D5513 /* ContentView.swift */; };
 		0431A04A29991324000D5513 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0431A04929991324000D5513 /* Assets.xcassets */; };
@@ -38,6 +40,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		042CEFCB29AD8705007DAB6C /* GroupInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInfoView.swift; sourceTree = "<group>"; };
+		042CEFCD29AE1416007DAB6C /* ExpandableText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableText.swift; sourceTree = "<group>"; };
 		0431A04229991321000D5513 /* IosChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IosChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0431A04529991321000D5513 /* IosChatAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IosChatAppApp.swift; sourceTree = "<group>"; };
 		0431A04729991321000D5513 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -81,6 +85,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		042CEFCA29AD86CF007DAB6C /* group */ = {
+			isa = PBXGroup;
+			children = (
+				04853DD829A5E8B80075D35F /* CreateGroupView.swift */,
+				04AF614329A9CAA4000DA717 /* GroupChatView.swift */,
+				042CEFCB29AD8705007DAB6C /* GroupInfoView.swift */,
+			);
+			path = group;
+			sourceTree = "<group>";
+		};
 		0431A03929991321000D5513 = {
 			isa = PBXGroup;
 			children = (
@@ -153,6 +167,7 @@
 		0441540429A372BC0057BA67 /* views */ = {
 			isa = PBXGroup;
 			children = (
+				042CEFCA29AD86CF007DAB6C /* group */,
 				04853DD529A5E1EE0075D35F /* common */,
 				0441541429A46AF20057BA67 /* auth */,
 				0441540A29A38A850057BA67 /* Fonts */,
@@ -160,8 +175,6 @@
 				0441540729A38A0A0057BA67 /* WelcomeUserView.swift */,
 				0441541729A472E70057BA67 /* ViewHolder.swift */,
 				04853DD329A5DD730075D35F /* HomeView.swift */,
-				04853DD829A5E8B80075D35F /* CreateGroupView.swift */,
-				04AF614329A9CAA4000DA717 /* GroupChatView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -200,6 +213,7 @@
 				04853DDA29A5F1640075D35F /* CTextField.swift */,
 				04AF614529A9CBD2000DA717 /* GroupIcon.swift */,
 				04AF614729ABC063000DA717 /* AsyncButton.swift */,
+				042CEFCD29AE1416007DAB6C /* ExpandableText.swift */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -292,9 +306,11 @@
 			files = (
 				0441540F29A38B210057BA67 /* Extension.swift in Sources */,
 				04853DD429A5DD730075D35F /* HomeView.swift in Sources */,
+				042CEFCC29AD8705007DAB6C /* GroupInfoView.swift in Sources */,
 				04853DD029A5BB3C0075D35F /* ButtonLabel.swift in Sources */,
 				0441540629A372F10057BA67 /* SignupView.swift in Sources */,
 				04AF614429A9CAA4000DA717 /* GroupChatView.swift in Sources */,
+				042CEFCE29AE1416007DAB6C /* ExpandableText.swift in Sources */,
 				0431A04829991321000D5513 /* ContentView.swift in Sources */,
 				04853DDD29A6077E0075D35F /* UserSocketService.swift in Sources */,
 				0431A04629991321000D5513 /* IosChatAppApp.swift in Sources */,
