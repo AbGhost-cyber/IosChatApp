@@ -9,12 +9,10 @@
 /* Begin PBXBuildFile section */
 		042CEFCC29AD8705007DAB6C /* GroupInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042CEFCB29AD8705007DAB6C /* GroupInfoView.swift */; };
 		042CEFCE29AE1416007DAB6C /* ExpandableText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042CEFCD29AE1416007DAB6C /* ExpandableText.swift */; };
+		042CEFD029AEF24A007DAB6C /* Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042CEFCF29AEF24A007DAB6C /* Endpoints.swift */; };
 		0431A04629991321000D5513 /* IosChatAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431A04529991321000D5513 /* IosChatAppApp.swift */; };
-		0431A04829991321000D5513 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431A04729991321000D5513 /* ContentView.swift */; };
 		0431A04A29991324000D5513 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0431A04929991324000D5513 /* Assets.xcassets */; };
 		0431A04D29991324000D5513 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0431A04C29991324000D5513 /* Preview Assets.xcassets */; };
-		0431A054299913E5000D5513 /* ChatSocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431A053299913E5000D5513 /* ChatSocketService.swift */; };
-		0431A05A29991C68000D5513 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431A05929991C68000D5513 /* ChatViewModel.swift */; };
 		0431A05D299CE37D000D5513 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0431A05C299CE37D000D5513 /* CryptoSwift */; };
 		0431A060299CE4D1000D5513 /* Security.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431A05F299CE4D1000D5513 /* Security.swift */; };
 		0441540329A35B4E0057BA67 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441540229A35B4E0057BA67 /* AuthService.swift */; };
@@ -42,13 +40,11 @@
 /* Begin PBXFileReference section */
 		042CEFCB29AD8705007DAB6C /* GroupInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInfoView.swift; sourceTree = "<group>"; };
 		042CEFCD29AE1416007DAB6C /* ExpandableText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableText.swift; sourceTree = "<group>"; };
+		042CEFCF29AEF24A007DAB6C /* Endpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoints.swift; sourceTree = "<group>"; };
 		0431A04229991321000D5513 /* IosChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IosChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0431A04529991321000D5513 /* IosChatAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IosChatAppApp.swift; sourceTree = "<group>"; };
-		0431A04729991321000D5513 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		0431A04929991324000D5513 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0431A04C29991324000D5513 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		0431A053299913E5000D5513 /* ChatSocketService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSocketService.swift; sourceTree = "<group>"; };
-		0431A05929991C68000D5513 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		0431A05F299CE4D1000D5513 /* Security.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Security.swift; sourceTree = "<group>"; };
 		0431A061299CF5E1000D5513 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		0441540229A35B4E0057BA67 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
@@ -138,8 +134,6 @@
 		0431A05829991C38000D5513 /* viewmodel */ = {
 			isa = PBXGroup;
 			children = (
-				0431A053299913E5000D5513 /* ChatSocketService.swift */,
-				0431A05929991C68000D5513 /* ChatViewModel.swift */,
 				0441541929A484C80057BA67 /* AuthViewModel.swift */,
 				04AF613C29A62B65000DA717 /* UserSocketViewModel.swift */,
 			);
@@ -160,6 +154,7 @@
 			children = (
 				0441540229A35B4E0057BA67 /* AuthService.swift */,
 				04853DDC29A6077E0075D35F /* UserSocketService.swift */,
+				042CEFCF29AEF24A007DAB6C /* Endpoints.swift */,
 			);
 			path = services;
 			sourceTree = "<group>";
@@ -171,7 +166,6 @@
 				04853DD529A5E1EE0075D35F /* common */,
 				0441541429A46AF20057BA67 /* auth */,
 				0441540A29A38A850057BA67 /* Fonts */,
-				0431A04729991321000D5513 /* ContentView.swift */,
 				0441540729A38A0A0057BA67 /* WelcomeUserView.swift */,
 				0441541729A472E70057BA67 /* ViewHolder.swift */,
 				04853DD329A5DD730075D35F /* HomeView.swift */,
@@ -311,10 +305,8 @@
 				0441540629A372F10057BA67 /* SignupView.swift in Sources */,
 				04AF614429A9CAA4000DA717 /* GroupChatView.swift in Sources */,
 				042CEFCE29AE1416007DAB6C /* ExpandableText.swift in Sources */,
-				0431A04829991321000D5513 /* ContentView.swift in Sources */,
 				04853DDD29A6077E0075D35F /* UserSocketService.swift in Sources */,
 				0431A04629991321000D5513 /* IosChatAppApp.swift in Sources */,
-				0431A05A29991C68000D5513 /* ChatViewModel.swift in Sources */,
 				04AF614829ABC063000DA717 /* AsyncButton.swift in Sources */,
 				0441541829A472E70057BA67 /* ViewHolder.swift in Sources */,
 				0441540329A35B4E0057BA67 /* AuthService.swift in Sources */,
@@ -327,7 +319,7 @@
 				0441541629A46B050057BA67 /* LoginView.swift in Sources */,
 				04AF613D29A62B65000DA717 /* UserSocketViewModel.swift in Sources */,
 				04853DD729A5E1FD0075D35F /* NoItemView.swift in Sources */,
-				0431A054299913E5000D5513 /* ChatSocketService.swift in Sources */,
+				042CEFD029AEF24A007DAB6C /* Endpoints.swift in Sources */,
 				04AF614029A6F474000DA717 /* Models.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

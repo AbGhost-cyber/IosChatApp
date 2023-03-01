@@ -74,16 +74,16 @@ extension Group {
         [
             Group(groupId: "12", groupIcon: "👧🏾", groupName: "Android Developers",
                   groupDesc: "Android things", groupUrl: "", dateCreated: 12,
-                  users: [], requests: [], messages: [], id: "124", updatedTime: 12),
+                  users: [], requests: [], messages: [], currentUserIsAdmin: true, id: "124", updatedTime: 12),
             Group(groupId: "12", groupIcon: "J", groupName: "Jesus my role model",
                   groupDesc: "Android things", groupUrl: "", dateCreated: 12,
-                  users: [], requests: [], messages: [], id: "123", updatedTime: 12),
+                  users: [], requests: [], messages: [], currentUserIsAdmin: false, id: "123", updatedTime: 12),
             Group(groupId: "12", groupIcon: "👧🏾", groupName: "TRUTH OF THE WORD",
                   groupDesc: "Android things", groupUrl: "", dateCreated: 12,
-                  users: [], requests: [], messages: [], id: "12", updatedTime: 12),
+                  users: [], requests: [], messages: [], currentUserIsAdmin: false, id: "12", updatedTime: 12),
             Group(groupId: "12", groupIcon: "👧🏾", groupName: "Android Developers",
                   groupDesc: "Android things", groupUrl: "", dateCreated: 12,
-                  users: [], requests: [], messages: [], id: "12345", updatedTime: 12)
+                  users: [], requests: [], messages: [], currentUserIsAdmin: false, id: "12345", updatedTime: 12)
         ]
     }
 }

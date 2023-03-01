@@ -55,6 +55,18 @@ struct GroupInfoView: View {
                     .font(.secondaryMedium)
                     .foregroundColor(.primary)
             }
+            if let group = userVm.selectedGroup {
+                if group.currentUserIsAdmin {
+                    ToolbarItem {
+                        Button {
+                            
+                        } label: {
+                            Image(systemName: "pencil")
+                                .foregroundColor(.primary)
+                        }
+                    }
+                }
+            }
         }
     }
     
@@ -76,6 +88,8 @@ struct GroupInfoView: View {
 
 struct GroupInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        GroupInfoView(userVm: UserSocketViewModel())
+        NavigationStack {
+            GroupInfoView(userVm: UserSocketViewModel())
+        }
     }
 }

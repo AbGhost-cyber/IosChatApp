@@ -66,6 +66,9 @@ struct HomeView: View {
                     Task {
                         await userSocketVm.listenForMessages()
                     }
+                    Task {
+                        await userSocketVm.searchGroups(with: "amen")
+                    }
                 }
             }
         }

@@ -88,10 +88,9 @@ class UserSocketViewModel: ObservableObject {
         }
         do {
             let encryptedMsg = try security.encryptMessage(message.trimmingCharacters(in: .whitespacesAndNewlines), for: groupId)
-            print("encryptedMsg: \(encryptedMsg)")
             try await userSocketService.sendMessage(text: encryptedMsg, groupId: groupId)
             self.message = ""
-        } catch SecurityException.msgEncryptError {
+        } catch {
             print("couldn't encrypt msg for groupId: \(groupId)")
         }
     }
@@ -176,5 +175,13 @@ class UserSocketViewModel: ObservableObject {
             mGroups[index] = group
         }
         self.decryptedGroups = mGroups
+    }
+    
+    func searchGroups(with keyword: String) async {
+        do {
+           let result = try await userSocketService.searchGroups(with: keyword)
+        } catch {
+            print("search groups: \(error.localizedDescription)")
+        }
     }
 }

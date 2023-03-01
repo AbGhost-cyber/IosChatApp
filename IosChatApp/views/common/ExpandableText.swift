@@ -3,6 +3,7 @@
 //  IosChatApp
 //
 //  Created by dremobaba on 2023/2/28.
+//  Reference: https://prafullkumar77.medium.com/swiftui-how-to-make-see-more-see-less-style-button-at-the-end-of-text-675f859c2c4f
 //
 
 import SwiftUI

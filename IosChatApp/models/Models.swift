@@ -16,7 +16,6 @@ struct Group: Codable, Identifiable, Hashable {
         hasher.combine(groupId)
     }
     
-    
     let groupId: String
     let groupIcon: String
     let groupName: String
@@ -26,8 +25,18 @@ struct Group: Codable, Identifiable, Hashable {
     let users: [String]
     let requests: [JoinRequest]
     var messages: [IncomingMessage]
+    let currentUserIsAdmin: Bool
     let id: String
     let updatedTime: Int
+}
+
+struct SearchGroupResponse: Decodable {
+    let groupId: String
+    let dateCreated: UInt64
+    let groupIcon: String
+    let groupName: String
+    let groupDesc: String
+    let groupUrl: String
 }
 
 struct JoinRequest: Codable {

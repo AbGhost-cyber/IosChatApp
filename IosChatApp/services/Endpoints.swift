@@ -1,17 +1,11 @@
 //
-//  ChatService.swift
+//  Endpoints.swift
 //  IosChatApp
 //
-//  Created by dremobaba on 2023/2/12.
+//  Created by dremobaba on 2023/3/1.
 //
 
 import Foundation
-protocol ChatSocketService {
-    func initSession() async throws
-    func sendMessage() async throws
-    func closeSession() async
-    func observeMessages() async throws
-}
 
 class EndPoints {
     let url: String
@@ -19,9 +13,11 @@ class EndPoints {
         self.url = url
     }
 }
+
 extension EndPoints {
     static let SOCKET_URL = "ws://localhost:8081"
     static let HTTP_URL = "http://localhost:8081"
+    
     static var ChatSocket: EndPoints {
         EndPoints(url: "\(SOCKET_URL)/chat")
     }
@@ -31,9 +27,10 @@ extension EndPoints {
     static var UserGroups: EndPoints {
         EndPoints(url: "\(HTTP_URL)/group")
     }
-    static var groupChat: EndPoints {
+    static var GroupChat: EndPoints {
         return EndPoints(url: "\(SOCKET_URL)/group/chat")
     }
+    static var SearchGroup: EndPoints {
+        return EndPoints(url: "\(HTTP_URL)/groups/search")
+    }
 }
-
-

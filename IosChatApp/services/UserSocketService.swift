@@ -13,6 +13,7 @@ protocol UserSocketService {
     func createGroup(with request: CreateGroupRequest) async throws -> Group
     func onGroupChange(callback: @escaping(Group) -> Void) async
     func sendMessage(text: String, groupId: String) async throws
+    func searchGroups(with keyword: String) async throws -> [SearchGroupResponse]
 }
 
 class UserSocketImpl: UserSocketService {
@@ -23,7 +24,7 @@ class UserSocketImpl: UserSocketService {
     private var sockets: Dictionary<String, URLSessionWebSocketTask> = [:]
     
     func openGroupSocket(callback: @escaping(Error?)-> Void) async throws {
-        let url = try URL.getUrlString(urlString: EndPoints.groupChat.url)
+        let url = try URL.getUrlString(urlString: EndPoints.GroupChat.url)
         let urlRequest = try URLRequest.requestWithToken(url: url)
         webSocketTask = session.webSocketTask(with: urlRequest)
         webSocketTask?.resume()
@@ -101,5 +102,17 @@ class UserSocketImpl: UserSocketService {
         DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
             self.sendPing(callback: callback)
         }
+    }
+    
+    func searchGroups(with keyword: String) async throws -> [SearchGroupResponse] {
+        var url = try URL.getUrlString(urlString: EndPoints.SearchGroup.url)
+        url.append(queryItems: [.init(name: "keyword", value: keyword)])
+        print(url)
+        let request = try URLRequest.requestWithToken(url: url, addAppHeader: true)
+        let (data, _) = try await session.data(for: request)
+        if let groups = try? JSONDecoder().decode([SearchGroupResponse].self, from: data) {
+            return groups
+        }
+       throw ServiceError.decodingError
     }
 }

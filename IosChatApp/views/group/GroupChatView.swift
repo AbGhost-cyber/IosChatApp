@@ -19,8 +19,8 @@ struct GroupChatView: View {
             VStack {
                 ScrollView(showsIndicators: false) {
                     ScrollViewReader { scrollProxy in
-                        if let group = userVm.selectedGroup {
-                            LazyVStack {
+                        LazyVStack {
+                            if let group = userVm.selectedGroup {
                                 ForEach(group.messages.indices, id: \.self) { index in
                                     let message = group.messages[index]
                                     messageItem(message: message, index: index)
@@ -31,12 +31,10 @@ struct GroupChatView: View {
                                 .onAppear {
                                     scrollToLastMessage(proxy: scrollProxy)
                                 }
-                            }.overlay {
-                                if group.messages.isEmpty {
-                                    NoItemView(text: "no messages yet")
-                                }
                             }
+                            
                         }
+                        
                     }
                 }.onTapGesture {
                     msgFieldIsFocused = false
@@ -69,7 +67,14 @@ struct GroupChatView: View {
                     }
                 }
             }
-
+            .overlay {
+                if let group = userVm.selectedGroup {
+                    if group.messages.isEmpty {
+                        NoItemView(text: "no messages yet")
+                    }
+                }
+            }
+            
         }
     }
     
@@ -110,7 +115,7 @@ struct GroupChatView: View {
     @ViewBuilder
     private func messageItem(message: IncomingMessage, index: Int) -> some View {
         let isUser = message.name == userVm.getUserName()
-        let isNotification = message.name == ""
+        let isNotification = message.name == "" || message.name.isEmpty
         let messages = userVm.selectedGroup?.messages ?? []
         if !messages.isEmpty {
             let lastTextIndex = messages.index(before: index)
@@ -141,7 +146,7 @@ struct GroupChatView: View {
                         Text(message.message)
                             .font(.secondaryMedium)
                             .frame(minWidth: 30, minHeight: 20)
-                            .padding(.top, msgIsFromSameUser ? 10: 0)
+                            .padding(.top, msgIsFromSameUser ? 15: 0)
                             .padding([.bottom, .trailing, .leading])
                             .foregroundColor(isUser ? .white : userColor)
                             .multilineTextAlignment(.leading)
