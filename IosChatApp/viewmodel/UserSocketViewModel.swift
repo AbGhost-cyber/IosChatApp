@@ -27,6 +27,8 @@ enum ConnState {
     }
 }
 
+
+
 @MainActor
 class UserSocketViewModel: ObservableObject {
     
@@ -102,17 +104,26 @@ class UserSocketViewModel: ObservableObject {
     }
     
     
-    func fetchGroups() async throws {
+    func fetchGroups(isFetchOnly: Bool = false) async {
         onlineStatus = .connecting
         do {
             let groups = try await userSocketService.fetchGroups()
             self.groups = groups
             //TODO: maybe this would be better if we save decrypted msgs to local
-            if groups.isEmpty {
+            if groups.isEmpty || isFetchOnly {
                 onlineStatus = .connected
                 return
             }
             onlineStatus = .updating
+
+//           var connectionTask: Task<Void, Error>?
+//           try await self.userSocketService.openGroupSocket { error in
+//               connectionTask = Task {
+//                   await self.updateUserStatus(isConnected: error == nil)
+//                   print("ping: \(error?.localizedDescription ?? "active")")
+//               }
+//            }
+//            connectionTask?.cancel()
             
             try await self.userSocketService.openGroupSocket() { error in
                 Task {

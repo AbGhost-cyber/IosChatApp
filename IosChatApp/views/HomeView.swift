@@ -10,68 +10,68 @@ import SwiftUI
 struct HomeView: View {
     @State private var showCreateGroupSheet = false
     @ObservedObject var userSocketVm: UserSocketViewModel
-    @State private var searchedText: String = ""
+    @StateObject var searchVm: SearchViewModel = SearchViewModel()
+    
     var body: some View {
         NavigationStack {
             ZStack {
                 Rectangle().fill(Color.primary.opacity(0.1))
                     .ignoresSafeArea(.all)
-                List {
-                    let sortedGroups = userSocketVm.decryptedGroups
-                        .sorted(by: {$0.updatedTime > $1.updatedTime})
-                    ForEach(sortedGroups) { group in
-                        NavigationLink {
+                groupListView
+                    .scrollContentBackground(.hidden)
+                    .listStyle(.plain)
+                    .navigationDestination(isPresented: $userSocketVm.navigateToCreatedGroup) {
+                        if userSocketVm.selectedGroup != nil {
                             GroupChatView(userVm: userSocketVm)
-                                .onAppear {
-                                    userSocketVm.selectedGroup = group
-                                }
-                        } label: {
-                            chatRowView(group: group)
                         }
                     }
-                    .listRowBackground(Color.clear)
-                }
-                .navigationDestination(isPresented: $userSocketVm.navigateToCreatedGroup) {
-                    if userSocketVm.selectedGroup != nil {
-                        GroupChatView(userVm: userSocketVm)
+                    .toolbar {
+                        createGroupIcon
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            EditButton()
+                                .foregroundColor(.primary)
+                                .font(.primaryBold)
+                        }
+                        onlineStatus
                     }
-                }
-                .scrollContentBackground(.hidden)
-                .listStyle(.plain)
-                .toolbar {
-                    createGroupIcon
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        EditButton()
-                            .foregroundColor(.primary)
-                            .font(.primaryBold)
+                    .overlay { overlayView }
+                    .sheet(isPresented: $showCreateGroupSheet) {
+                        CreateGroupView(userVm: userSocketVm)
                     }
-                    onlineStatus
-                }
-                .overlay {
-                    if userSocketVm.groups.isEmpty {
-                        NoItemView(text: "groups you've joined will appear here!")
+                    .searchable(text: $searchVm.keyword, prompt: "Search Groups")
+                    .searchScopes($searchVm.scope) {
+                        Text("group").tag(SearchScope.group)
+                        Text("chat").tag(SearchScope.chat)
                     }
-                }
-                .sheet(isPresented: $showCreateGroupSheet) {
-                    CreateGroupView(userVm: userSocketVm)
-                }
-                .searchable(
-                    text: $searchedText,
-                   prompt: Text("Search Groups")
-                )
-                .onAppear {
-                    Task {
-                        try await userSocketVm.fetchGroups()
-                    }
-                    Task {
-                        await userSocketVm.listenForMessages()
-                    }
-                    Task {
-                        await userSocketVm.searchGroups(with: "amen")
-                    }
-                }
+                    .task { await doFetch() }
+                    .refreshable { await doFetch(fetchOnly: true) }
             }
         }
+    }
+    
+    
+    private func doFetch(fetchOnly: Bool = false) async {
+        await userSocketVm.fetchGroups(isFetchOnly: fetchOnly)
+        await userSocketVm.listenForMessages()
+    }
+    
+    private var groupListView: some View {
+        List {
+            let sortedGroups = userSocketVm.decryptedGroups
+                .sorted(by: {$0.updatedTime > $1.updatedTime})
+            ForEach(sortedGroups) { group in
+                NavigationLink {
+                    GroupChatView(userVm: userSocketVm)
+                        .onAppear {
+                            userSocketVm.selectedGroup = group
+                        }
+                } label: {
+                    chatRowView(group: group)
+                }
+            }
+            .listRowBackground(Color.clear)
+        }
+        .opacity(searchVm.isSearching ? 0 : 1)
     }
     
     private var createGroupIcon: some ToolbarContent {
@@ -84,6 +84,16 @@ struct HomeView: View {
                     .foregroundColor(Color.primary)
                     .font(.primaryBold)
             }
+        }
+    }
+    
+    @ViewBuilder
+    private var overlayView: some View {
+        if userSocketVm.groups.isEmpty {
+            NoItemView(text: "groups you've joined will appear here!")
+        }
+        if searchVm.isSearching {
+            SearchGroupsView(searchVM: searchVm, userVm: userSocketVm)
         }
     }
     

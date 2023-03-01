@@ -35,8 +35,8 @@ struct SearchGroupResponse: Decodable {
     let dateCreated: UInt64
     let groupIcon: String
     let groupName: String
-    let groupDesc: String
-    let groupUrl: String
+    var groupUrl: String
+    let users: Int
 }
 
 struct JoinRequest: Codable {
@@ -92,4 +92,28 @@ extension WebResponse: Decodable {
             self = .none
         }
     }
+}
+
+enum FetchPhase<V> {
+    
+    case initial
+    case fetching
+    case success(V)
+    case failure(Error)
+    case empty
+    
+    var value: V? {
+        if case .success(let v) = self {
+            return v
+        }
+        return nil
+    }
+    
+    var error: Error? {
+        if case .failure(let error) = self {
+            return error
+        }
+        return nil
+    }
+    
 }

@@ -10,6 +10,8 @@
 		042CEFCC29AD8705007DAB6C /* GroupInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042CEFCB29AD8705007DAB6C /* GroupInfoView.swift */; };
 		042CEFCE29AE1416007DAB6C /* ExpandableText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042CEFCD29AE1416007DAB6C /* ExpandableText.swift */; };
 		042CEFD029AEF24A007DAB6C /* Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042CEFCF29AEF24A007DAB6C /* Endpoints.swift */; };
+		042CEFD229AF2E6D007DAB6C /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042CEFD129AF2E6D007DAB6C /* SearchViewModel.swift */; };
+		042CEFD429AF31F4007DAB6C /* SearchGroupsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042CEFD329AF31F4007DAB6C /* SearchGroupsView.swift */; };
 		0431A04629991321000D5513 /* IosChatAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431A04529991321000D5513 /* IosChatAppApp.swift */; };
 		0431A04A29991324000D5513 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0431A04929991324000D5513 /* Assets.xcassets */; };
 		0431A04D29991324000D5513 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0431A04C29991324000D5513 /* Preview Assets.xcassets */; };
@@ -41,6 +43,8 @@
 		042CEFCB29AD8705007DAB6C /* GroupInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInfoView.swift; sourceTree = "<group>"; };
 		042CEFCD29AE1416007DAB6C /* ExpandableText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableText.swift; sourceTree = "<group>"; };
 		042CEFCF29AEF24A007DAB6C /* Endpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoints.swift; sourceTree = "<group>"; };
+		042CEFD129AF2E6D007DAB6C /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		042CEFD329AF31F4007DAB6C /* SearchGroupsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchGroupsView.swift; sourceTree = "<group>"; };
 		0431A04229991321000D5513 /* IosChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IosChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0431A04529991321000D5513 /* IosChatAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IosChatAppApp.swift; sourceTree = "<group>"; };
 		0431A04929991324000D5513 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -136,6 +140,7 @@
 			children = (
 				0441541929A484C80057BA67 /* AuthViewModel.swift */,
 				04AF613C29A62B65000DA717 /* UserSocketViewModel.swift */,
+				042CEFD129AF2E6D007DAB6C /* SearchViewModel.swift */,
 			);
 			path = viewmodel;
 			sourceTree = "<group>";
@@ -169,6 +174,7 @@
 				0441540729A38A0A0057BA67 /* WelcomeUserView.swift */,
 				0441541729A472E70057BA67 /* ViewHolder.swift */,
 				04853DD329A5DD730075D35F /* HomeView.swift */,
+				042CEFD329AF31F4007DAB6C /* SearchGroupsView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -316,6 +322,8 @@
 				04AF614629A9CBD2000DA717 /* GroupIcon.swift in Sources */,
 				0441540829A38A0A0057BA67 /* WelcomeUserView.swift in Sources */,
 				04853DD929A5E8B80075D35F /* CreateGroupView.swift in Sources */,
+				042CEFD229AF2E6D007DAB6C /* SearchViewModel.swift in Sources */,
+				042CEFD429AF31F4007DAB6C /* SearchGroupsView.swift in Sources */,
 				0441541629A46B050057BA67 /* LoginView.swift in Sources */,
 				04AF613D29A62B65000DA717 /* UserSocketViewModel.swift in Sources */,
 				04853DD729A5E1FD0075D35F /* NoItemView.swift in Sources */,

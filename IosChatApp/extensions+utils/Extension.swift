@@ -87,6 +87,17 @@ extension Group {
         ]
     }
 }
+extension SearchGroupResponse {
+    static var stubs: [SearchGroupResponse] {
+        [
+            SearchGroupResponse(groupId: "12", dateCreated: 12, groupIcon: "👧🏾", groupName: "Android Developers",
+                                groupUrl: "", users: 10),
+            SearchGroupResponse(groupId: "123", dateCreated: 12, groupIcon: "A", groupName: "Joyful Ministries",
+                                groupUrl: "", users: 200),
+            SearchGroupResponse(groupId: "1231", dateCreated: 12, groupIcon: "👧🏾", groupName: "Swift Developers", groupUrl: "", users: 13)
+        ]
+    }
+}
 
 extension URLResponse {
     func validateHTTPResponse() throws -> Int {
