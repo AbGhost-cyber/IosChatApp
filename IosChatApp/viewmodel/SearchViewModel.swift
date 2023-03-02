@@ -16,7 +16,7 @@ enum SearchScope {
 @MainActor
 class SearchViewModel: ObservableObject {
     
-    @Published var phase: FetchPhase<[SearchGroupResponse]> = .initial
+    @Published var phase: FetchPhase<[SearchData]> = .initial
     @Published var keyword: String = ""
     
     @Published var scope: SearchScope = .group
@@ -32,15 +32,15 @@ class SearchViewModel: ObservableObject {
         "No \(scope == .group ? "group" : "chat") found for\n\"\(keyword)\""
     }
     
-    var searchedGroups: [SearchGroupResponse] { phase.value ?? [] }
+    var searchedGroups: [SearchData] { phase.value ?? [] }
     
     private var cancellables = Set<AnyCancellable>()
     private let service: UserSocketService
+    private var userGroups: [Group] = []
     
     init(keyword: String = "", service: UserSocketService = UserSocketImpl()) {
         self.keyword = keyword
         self.service = service
-        
         startObserving()
     }
     
@@ -74,10 +74,34 @@ class SearchViewModel: ObservableObject {
         if scope == .group {
             await searchGroups()
         } else {
-            //TODO: searchChats
-            phase = .empty
+            await searchChats()
         }
-        print("called")
+    }
+    
+    func userIsGroupMember(groupdId: String) -> Bool {
+        return userGroups.contains(where: {$0.groupId == groupdId})
+    }
+    
+    func setUserGroups(_ groups: [Group]) {
+        self.userGroups = groups
+    }
+    
+    
+    func searchChats() async {
+        let searchedQuery = trimmedQuery
+        guard !searchedQuery.isEmpty else { return }
+        phase = .fetching
+
+        let searchGroupList = userGroups.filter { group in
+            group.messages.contains(where: {$0.message.lowercased().contains(searchedQuery.lowercased())})
+        }.map {$0.toSearchData(query: searchedQuery)}
+
+        if searchedQuery != trimmedQuery { return }
+        if searchGroupList.isEmpty {
+            phase = .empty
+        }else {
+            phase = .success(searchGroupList)
+        }
     }
     
     func searchGroups() async {
@@ -86,12 +110,12 @@ class SearchViewModel: ObservableObject {
         phase = .fetching
         
         do {
-            let searchedGroups = try await service.searchGroups(with: searchedQuery)
+            let searchedGroups = try await service.searchGroups(with: searchedQuery.lowercased())
             if searchedQuery != trimmedQuery { return }
             if searchedGroups.isEmpty {
                 phase = .empty
             } else {
-                phase = .success(searchedGroups)
+                phase = .success(searchedGroups.map{$0.toSearchData()})
             }
         } catch {
             if searchedQuery != trimmedQuery { return }

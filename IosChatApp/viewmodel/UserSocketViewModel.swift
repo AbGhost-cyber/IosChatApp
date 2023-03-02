@@ -34,7 +34,7 @@ class UserSocketViewModel: ObservableObject {
     
     @Published var onlineStatus: ConnState = .disconnected
     //TODO: make sure that the new user can never receive messages earlier than the date he joined
-    @Published var groups:[Group] = [] {
+    private var groups:[Group] = [] {
         didSet {
             decryptAllMsgs()
         }
@@ -42,6 +42,8 @@ class UserSocketViewModel: ObservableObject {
     @Published var decryptedGroups: [Group] = []
     @Published var userMessage: String = ""
     @Published var navigateToCreatedGroup = false
+    var groupScrollPostion: Int = 0
+    var useVmScrollPos: Bool = false
     @Published var selectedGroup: Group? = nil
     @Published var hasError = false
     @Published var message: String = ""
@@ -69,6 +71,10 @@ class UserSocketViewModel: ObservableObject {
             }
             self.groups = mGroups
         }
+    }
+    
+    func getGroupById(_ id: String) -> Group? {
+        return decryptedGroups.first(where: {$0.groupId == id})
     }
     
     func listenForMessages() async {
@@ -116,14 +122,7 @@ class UserSocketViewModel: ObservableObject {
             }
             onlineStatus = .updating
 
-//           var connectionTask: Task<Void, Error>?
-//           try await self.userSocketService.openGroupSocket { error in
-//               connectionTask = Task {
-//                   await self.updateUserStatus(isConnected: error == nil)
-//                   print("ping: \(error?.localizedDescription ?? "active")")
-//               }
-//            }
-//            connectionTask?.cancel()
+
             
             try await self.userSocketService.openGroupSocket() { error in
                 Task {
@@ -186,13 +185,5 @@ class UserSocketViewModel: ObservableObject {
             mGroups[index] = group
         }
         self.decryptedGroups = mGroups
-    }
-    
-    func searchGroups(with keyword: String) async {
-        do {
-           let result = try await userSocketService.searchGroups(with: keyword)
-        } catch {
-            print("search groups: \(error.localizedDescription)")
-        }
     }
 }

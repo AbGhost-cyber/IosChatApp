@@ -81,9 +81,10 @@ struct GroupChatView: View {
     private func scrollToLastMessage(proxy: ScrollViewProxy) {
         if let lastMessage = userVm.selectedGroup?.messages.last {
             withAnimation(.easeOut(duration: 0.4)) {
-                let index = userVm.selectedGroup!.messages.firstIndex(of: lastMessage)
+                let index = userVm.useVmScrollPos ? userVm.groupScrollPostion : userVm.selectedGroup!.messages.firstIndex(of: lastMessage)
                 proxy.scrollTo(index ?? 0, anchor: .bottom)
             }
+            userVm.useVmScrollPos = false
         }
     }
     

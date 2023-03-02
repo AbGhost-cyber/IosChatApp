@@ -30,13 +30,25 @@ struct Group: Codable, Identifiable, Hashable {
     let updatedTime: Int
 }
 
+
 struct SearchGroupResponse: Decodable {
     let groupId: String
     let dateCreated: UInt64
     let groupIcon: String
     let groupName: String
-    var groupUrl: String
+    let groupUrl: String
     let users: Int
+}
+
+struct SearchData {
+    let groupId: String
+    let dateCreated: UInt64
+    let groupIcon: String
+    let groupName: String
+    let groupUrl: String
+    let users: Int
+    let query: String
+    let foundText: String
 }
 
 struct JoinRequest: Codable {

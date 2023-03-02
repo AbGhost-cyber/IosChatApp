@@ -19,6 +19,9 @@ extension Font {
     static var groupIconMini: Font {
         boldFont(40)
     }
+    static var groupIconMini1: Font {
+        boldFont(65)
+    }
     static var groupIconMini2: Font {
         boldFont(25)
     }
@@ -86,7 +89,24 @@ extension Group {
                   users: [], requests: [], messages: [], currentUserIsAdmin: false, id: "12345", updatedTime: 12)
         ]
     }
+    
+    func toSearchData(query: String) -> SearchData {
+        let message = self.messages.last(where: {$0.message.lowercased().contains(query.lowercased())})?.message ?? "message not found"
+        let data =  SearchData(
+            groupId: self.groupId,
+            dateCreated: self.dateCreated,
+            groupIcon: self.groupIcon,
+            groupName: self.groupName,
+            groupUrl: self.groupUrl,
+            users: self.users.count,
+            query: query,
+            foundText: message)
+        return data
+    }
 }
+
+
+
 extension SearchGroupResponse {
     static var stubs: [SearchGroupResponse] {
         [
@@ -96,6 +116,11 @@ extension SearchGroupResponse {
                                 groupUrl: "", users: 200),
             SearchGroupResponse(groupId: "1231", dateCreated: 12, groupIcon: "👧🏾", groupName: "Swift Developers", groupUrl: "", users: 13)
         ]
+    }
+    
+    func toSearchData() -> SearchData {
+        let data =  SearchData(groupId: self.groupId, dateCreated: self.dateCreated, groupIcon: self.groupIcon, groupName: self.groupName, groupUrl: self.groupUrl, users: self.users, query: "", foundText: "")
+        return data
     }
 }
 
@@ -138,26 +163,26 @@ extension URL {
     }
 }
 
-extension Sequence {
-    func concurrentForEach(
-        _ operation: @escaping (Element) async throws -> Void
-    ) async {
-        // A task group automatically waits for all of its
-        // sub-tasks to complete, while also performing those
-        // tasks in parallel:
-        await withTaskGroup(of: Void.self) { group in
-            for element in self {
-                group.addTask {
-                    do {
-                        try await operation(element)
-                    } catch {
-                        print("error performing task: \(error.localizedDescription)")
-                    }
-                }
-            }
-        }
-    }
-}
+//extension Sequence {
+//    func concurrentForEach(
+//        _ operation: @escaping (Element) async throws -> Void
+//    ) async {
+//        // A task group automatically waits for all of its
+//        // sub-tasks to complete, while also performing those
+//        // tasks in parallel:
+//        await withTaskGroup(of: Void.self) { group in
+//            for element in self {
+//                group.addTask {
+//                    do {
+//                        try await operation(element)
+//                    } catch {
+//                        print("error performing task: \(error.localizedDescription)")
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
 extension String {
     func toBase64() -> String {

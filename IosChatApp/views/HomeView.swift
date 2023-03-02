@@ -43,16 +43,19 @@ struct HomeView: View {
                         Text("group").tag(SearchScope.group)
                         Text("chat").tag(SearchScope.chat)
                     }
-                    .task { await doFetch() }
-                    .refreshable { await doFetch(fetchOnly: true) }
+                    .task {
+                        Task {
+                            await userSocketVm.fetchGroups()
+                        }
+                        Task {
+                            await userSocketVm.listenForMessages()
+                        }
+                    }
+                    .refreshable {
+                        await userSocketVm.fetchGroups(isFetchOnly: true)
+                    }
             }
         }
-    }
-    
-    
-    private func doFetch(fetchOnly: Bool = false) async {
-        await userSocketVm.fetchGroups(isFetchOnly: fetchOnly)
-        await userSocketVm.listenForMessages()
     }
     
     private var groupListView: some View {
@@ -89,7 +92,7 @@ struct HomeView: View {
     
     @ViewBuilder
     private var overlayView: some View {
-        if userSocketVm.groups.isEmpty {
+        if userSocketVm.decryptedGroups.isEmpty {
             NoItemView(text: "groups you've joined will appear here!")
         }
         if searchVm.isSearching {

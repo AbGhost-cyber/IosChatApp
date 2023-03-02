@@ -107,7 +107,6 @@ class UserSocketImpl: UserSocketService {
     func searchGroups(with keyword: String) async throws -> [SearchGroupResponse] {
         var url = try URL.getUrlString(urlString: EndPoints.SearchGroup.url)
         url.append(queryItems: [.init(name: "keyword", value: keyword)])
-        print(url)
         let request = try URLRequest.requestWithToken(url: url, addAppHeader: true)
         let (data, _) = try await session.data(for: request)
         if let groups = try? JSONDecoder().decode([SearchGroupResponse].self, from: data) {
