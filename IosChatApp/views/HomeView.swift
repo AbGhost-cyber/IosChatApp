@@ -92,7 +92,7 @@ struct HomeView: View {
     
     @ViewBuilder
     private var overlayView: some View {
-        if userSocketVm.decryptedGroups.isEmpty {
+        if userSocketVm.decryptedGroups.isEmpty && !searchVm.isSearching {
             NoItemView(text: "groups you've joined will appear here!")
         }
         if searchVm.isSearching {

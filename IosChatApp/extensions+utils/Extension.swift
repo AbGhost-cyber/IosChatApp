@@ -50,6 +50,10 @@ extension Font {
     static var secondaryText: Font {
         regularFont(16)
     }
+    
+    static var secondaryTextMini: Font {
+        regularFont(14)
+    }
     static var secondaryBold: Font {
         boldFont(16)
     }
@@ -77,7 +81,7 @@ extension Group {
         [
             Group(groupId: "12", groupIcon: "👧🏾", groupName: "Android Developers",
                   groupDesc: "Android things", groupUrl: "", dateCreated: 12,
-                  users: [], requests: [], messages: [], currentUserIsAdmin: true, id: "124", updatedTime: 12),
+                  users: ["Ab", "Ud", "Joseph", "Aloy"], requests: [], messages: [], currentUserIsAdmin: true, id: "124", updatedTime: 12),
             Group(groupId: "12", groupIcon: "J", groupName: "Jesus my role model",
                   groupDesc: "Android things", groupUrl: "", dateCreated: 12,
                   users: [], requests: [], messages: [], currentUserIsAdmin: false, id: "123", updatedTime: 12),
@@ -214,5 +218,20 @@ extension WelcomeUserView {
             case .hasAccount: return 2
             }
         }
+    }
+}
+
+extension Date {
+    var millisecondsSince1970: Int64 {
+        Int64((self.timeIntervalSince1970 * 1000.0).rounded())
+    }
+    
+    init(milliseconds: Int64) {
+        self = Date(timeIntervalSince1970: TimeInterval(milliseconds) / 1000)
+    }
+    var customFormat: String {
+        var dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy/MM/dd"
+        return dateFormatter.string(from: self)
     }
 }

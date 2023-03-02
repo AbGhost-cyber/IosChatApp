@@ -21,7 +21,7 @@ struct Group: Codable, Identifiable, Hashable {
     let groupName: String
     let groupDesc: String
     let groupUrl: String
-    let dateCreated: UInt64
+    let dateCreated: Int64
     let users: [String]
     let requests: [JoinRequest]
     var messages: [IncomingMessage]
@@ -33,7 +33,7 @@ struct Group: Codable, Identifiable, Hashable {
 
 struct SearchGroupResponse: Decodable {
     let groupId: String
-    let dateCreated: UInt64
+    let dateCreated: Int64
     let groupIcon: String
     let groupName: String
     let groupUrl: String
@@ -42,7 +42,7 @@ struct SearchGroupResponse: Decodable {
 
 struct SearchData {
     let groupId: String
-    let dateCreated: UInt64
+    let dateCreated: Int64
     let groupIcon: String
     let groupName: String
     let groupUrl: String

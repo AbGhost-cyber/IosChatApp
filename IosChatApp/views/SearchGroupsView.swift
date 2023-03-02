@@ -12,7 +12,6 @@ struct SearchGroupsView: View {
     @ObservedObject var userVm: UserSocketViewModel
     @State private var showGroupDetails = false
     @State private var showGroupChat = false
-    @State private var searchData: SearchData? = nil
     @Environment(\.dismissSearch) var dismissSearch
     
     init(searchVM: SearchViewModel, userVm: UserSocketViewModel) {
@@ -40,19 +39,19 @@ struct SearchGroupsView: View {
     
     @ViewBuilder
     private var groupDetailView: some View {
-        if let selectedGroupSearch = searchData {
+        if let selectedGroupSearch = searchVM.selectedSearchData {
             VStack(spacing: 10) {
                 GroupIcon(size: 120, icon: selectedGroupSearch.groupIcon, font: .groupIconMini1)
                 Text(selectedGroupSearch.groupName)
                     .foregroundColor(.primary)
-                    .font(.groupIconMini)
+                    .font(.welcome)
                     .multilineTextAlignment(.center)
                     .padding(.top)
-                Text("Created on 2022/7/6")
+                Text("Created on \(Date(milliseconds: selectedGroupSearch.dateCreated).customFormat)")
                     .font(.secondaryLarge)
                     .foregroundColor(.secondary)
                     .padding(.top)
-                Text("90 members")
+                Text("\(selectedGroupSearch.users) member(s)")
                     .font(.secondaryLarge)
                     .foregroundColor(.accentColor)
                 AsyncButton {
@@ -79,7 +78,10 @@ struct SearchGroupsView: View {
                     .overlay {
                         Circle().fill(Color.primary.opacity(0.15))
                     }
+                    .offset(y: -40)
             }
+        } else {
+            Text("didn't fetch")
         }
     }
     func highlightedText(str: String, searched: String) -> Text {
@@ -125,7 +127,7 @@ struct SearchGroupsView: View {
                 print("tapped group")
                 showGroupDetails = !searchVM.userIsGroupMember(groupdId: group.groupId)
                 if showGroupDetails {
-                    searchData = group
+                    searchVM.selectedSearchData = group
                     return
                 }
                 if let selectedGroup = userVm.getGroupById(group.groupId) {

@@ -34,6 +34,8 @@ class SearchViewModel: ObservableObject {
     
     var searchedGroups: [SearchData] { phase.value ?? [] }
     
+    @Published var selectedSearchData: SearchData? = nil
+    
     private var cancellables = Set<AnyCancellable>()
     private let service: UserSocketService
     private var userGroups: [Group] = []
