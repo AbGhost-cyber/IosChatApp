@@ -9,52 +9,64 @@ import SwiftUI
 
 struct GroupInfoView: View {
     @ObservedObject var userVm: UserSocketViewModel
+    //TODO: make it possible to scan qr code and generate group qr code
     
     var body: some View {
-        GeometryReader { proxy in
             ZStack {
                 Rectangle().fill(Color.primary.opacity(0.1))
                     .ignoresSafeArea(.all)
-                ScrollView(showsIndicators: false) {
-                    VStack(alignment: .center) {
-                        if let group = userVm.selectedGroup {
-                            
+                if let group = userVm.selectedGroup {
+                    List {
+                        Section {
                             GroupIcon(size: 150, icon: group.groupIcon, font: .groupIcon)
                                 .padding(.top)
-                            
                             Text(group.groupName)
-                                .font(.groupIconMini)
+                                .font(.groupIconMini3)
                                 .foregroundColor(.primary)
                             Text("Group")
                                 .font(.secondaryLarge)
                                 .foregroundColor(.secondary)
                                 .padding(.top, 0.5)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .hideRowSeperator()
+                        
+                        Section {
                             HStack {
                                 iconText("audio", icon: "phone.fill")
                                 iconText("video", icon: "video.fill")
                                 iconText("search", icon: "magnifyingglass")
                             }
-                            .padding([.horizontal, .top])
-                            //.padding()
-                            
-                            //MARK: group description
+                        }.hideRowSeperator(with: .secondary.opacity(0.1))
+                        
+                        Section {
                             ExpandableText(group.groupDesc, lineLimit: 3)
                                 .font(.secondaryMedium)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .frame(minHeight: 50)
-                                .padding()
-                                .background(Color.secondary.opacity(0.1))
-                                .cornerRadius(12.0)
-                                .padding(.horizontal)
-                                .padding(.top, 5)
-                            
-                            //MARK: form
-                            groupForm(group: group)
-                                .scrollContentBackground(.hidden)
-                                .frame(height: proxy.size.height / 1.35)
-                                .scrollDisabled(true)
-                            
-                            //MARK: search group
+                        }.hideRowSeperator(with: .secondary.opacity(0.1))
+                        
+                        if group.currentUserIsAdmin {
+                            Section {
+                                formLabel("Group Requests", icon: "bell.fill", color: .mint)
+                            } footer: {
+                                Text("check here often to view those who are interested in joining your group:)")
+                                    
+                            }.hideRowSeperator(with: .secondary.opacity(0.1))
+                        }
+                        
+                        Section {
+                            formLabel("Starred Messages", icon: "star.fill", badge: "12")
+                        }.hideRowSeperator(with: .secondary.opacity(0.1))
+                        
+                        Section {
+                            formLabel("Mute", icon: "speaker.slash", color: .accentColor)
+                            formLabel("Wallpaper & Sound", icon: "text.below.photo.fill", color: .pink)
+                        }.listRowBackground(Color.secondary.opacity(0.1))
+                        
+                        Section {
+                            formLabel("Encryption", icon: "lock.fill", color: .accentColor, isEnc: true)
+                        }.listRowBackground(Color.secondary.opacity(0.1))
+                        
+                        Section {
                             HStack {
                                 Text("\(group.users.count) Participants")
                                     .font(.groupIconMini2)
@@ -66,23 +78,40 @@ struct GroupInfoView: View {
                                         Circle().fill(Color.secondary.opacity(0.1))
                                     }
                             }
-                            .padding(.horizontal)
-                            
-                            List(group.users, id: \.self) { user in
+                        }
+                        .listRowInsets(EdgeInsets())
+                        .hideRowSeperator()
+                        
+                        Section {
+                            ForEach(group.users.prefix(10), id: \.self) { user in
                                 HStack(spacing: 15) {
                                     GroupIcon(size: 40, icon: String(user.first!), font: .groupIconMini2)
                                     Text(user)
-                                        .font(.primaryBold)
+                                        .font(.secondaryMedium)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .foregroundColor(.secondary.opacity(0.5))
                                 }
-                                .listRowBackground(Color.secondary.opacity(0.1))
                             }
-                            .frame(height: proxy.size.height)
-                            .offset(y: -30)
-                            .scrollContentBackground(.hidden)
+                            if group.users.count > 10 {
+                                HStack {
+                                    Text("See all")
+                                        .font(.secondaryMedium)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                }
+                                .foregroundColor(.secondary)
+                            }
                         }
+                        .listRowBackground(Color.secondary.opacity(0.1))
+                        
+                        dangerousZone(group: group)
+                        
                     }
+                    .scrollContentBackground(.hidden)
                     
                 }
+                    
             }.toolbar {
                 ToolbarItem(placement: .principal) {
                     Text("Group info")
@@ -102,37 +131,24 @@ struct GroupInfoView: View {
                     }
                 }
             }
-        }
     }
     
     
-    private func groupForm(group: Group) -> some View {
-        Form {
-            if group.currentUserIsAdmin {
-                Section {
-                    formLabel("Group Requests", icon: "bell.fill", color: .mint)
-                } footer: {
-                    Text("check here often to view those who are interested in joining your group:)")
-                        
-                }
-                .listRowBackground(Color.secondary.opacity(0.1))
+    private func dangerousZone(group: Group) -> some View {
+        Section {
+            Text("Clear Chat")
+            Text("Exit Group")
+            Text("Report Group")
+        } footer: {
+            VStack(alignment: .leading) {
+                Text("Created by Admin")
+                Text("Created on \(Date(milliseconds: group.dateCreated).customFormat)")
             }
-            
-            Section {
-                formLabel("Starred Messages", icon: "star.fill")
-            }
-            .listRowBackground(Color.secondary.opacity(0.1))
-            
-            Section {
-                formLabel("Mute", icon: "speaker.slash", color: .accentColor)
-                formLabel("Wallpaper & Sound", icon: "text.below.photo.fill", color: .pink)
-            }.listRowBackground(Color.secondary.opacity(0.1))
-            
-            Section {
-                formLabel("Encryption", icon: "lock.fill", color: .accentColor, isEnc: true)
-            }
-            .listRowBackground(Color.secondary.opacity(0.1))
+            .foregroundColor(.secondary)
+            .font(.secondaryTextMini)
         }
+        .foregroundColor(.red)
+        .listRowBackground(Color.secondary.opacity(0.1))
     }
     
     private func formLabel(_ text: String,
@@ -178,7 +194,6 @@ struct GroupInfoView: View {
         }
         .frame(maxWidth: .infinity)
         .frame(height: 80)
-        .background(Color.secondary.opacity(0.1))
         .cornerRadius(12.0)
         .foregroundColor(.accentColor)
     }

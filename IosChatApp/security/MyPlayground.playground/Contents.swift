@@ -174,16 +174,18 @@ func decrypt (bytes: [UInt8]) throws -> String {
 //print(String(UUID().uuidString.dropLast(4)))
 //Data(self.utf8).base64EncodedString()
 
-let ss = String(UUID().uuidString.dropLast(4)).toBase64()
-let real = ss.fromBase64()!
-print("real: \(real)")
-if let aes = try? AES(key: real, iv: "abdefdsrfjdirogf"),
-    let aesE = try? aes.encrypt(Array("testString".utf8)) {
-    print("AES encrypted: \(aesE.toHexString())")
-    
-    let aesD = try? aes.decrypt(Array(hex: aesE.toHexString()))
-    let decrypted = String(bytes: aesD!, encoding: .utf8)
-    print("AES decrypted: \(decrypted ?? "ok")")
-}else{
-    print("error")
-}
+//let ss = String(UUID().uuidString.dropLast(4)).toBase64()
+//let real = ss.fromBase64()!
+//print("real: \(real)")
+//if let aes = try? AES(key: real, iv: "abdefdsrfjdirogf"),
+//    let aesE = try? aes.encrypt(Array("testString".utf8)) {
+//    print("AES encrypted: \(aesE.toHexString())")
+//
+//    let aesD = try? aes.decrypt(Array(hex: aesE.toHexString()))
+//    let decrypted = String(bytes: aesD!, encoding: .utf8)
+//    print("AES decrypted: \(decrypted ?? "ok")")
+//}else{
+//    print("error")
+//}
+let mins = 55 + 52 + 197 + 92 + 30 + 47 + 120 + 132 + 52 + 45
+print(mins)

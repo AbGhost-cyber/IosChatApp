@@ -169,10 +169,3 @@ struct SearchGroupsView_Previews: PreviewProvider {
     }
 }
 
-extension View {
-    func overlayWithBg() -> some View {
-        return self
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.primary.opacity(0.1))
-    }
-}

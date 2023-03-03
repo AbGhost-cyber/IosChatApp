@@ -25,6 +25,9 @@ extension Font {
     static var groupIconMini2: Font {
         boldFont(25)
     }
+    static var groupIconMini3: Font {
+        boldFont(30)
+    }
     static var signupTitle: Font {
         boldFont(27)
     }
@@ -81,7 +84,7 @@ extension Group {
         [
             Group(groupId: "12", groupIcon: "👧🏾", groupName: "Android Developers",
                   groupDesc: "Android things", groupUrl: "", dateCreated: 12,
-                  users: ["Ab", "Ud", "Joseph", "Aloy"], requests: [], messages: [], currentUserIsAdmin: true, id: "124", updatedTime: 12),
+                  users: ["Ab", "Ud", "Joseph", "Aloy", "Aloy5", "Aloy2", "Aloy111", "Aloy12", "Aloy1", "Aloy33"], requests: [], messages: [], currentUserIsAdmin: true, id: "124", updatedTime: 12),
             Group(groupId: "12", groupIcon: "J", groupName: "Jesus my role model",
                   groupDesc: "Android things", groupUrl: "", dateCreated: 12,
                   users: [], requests: [], messages: [], currentUserIsAdmin: false, id: "123", updatedTime: 12),
@@ -230,8 +233,22 @@ extension Date {
         self = Date(timeIntervalSince1970: TimeInterval(milliseconds) / 1000)
     }
     var customFormat: String {
-        var dateFormatter = DateFormatter()
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy/MM/dd"
         return dateFormatter.string(from: self)
+    }
+}
+
+extension View {
+    func overlayWithBg() -> some View {
+        return self
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.primary.opacity(0.1))
+    }
+    
+    func hideRowSeperator(with bgColor: Color = .clear) -> some View {
+        return self
+            .listRowSeparator(.hidden)
+            .listRowBackground(bgColor)
     }
 }
