@@ -28,6 +28,7 @@
 		0441541A29A484C80057BA67 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441541929A484C80057BA67 /* AuthViewModel.swift */; };
 		0476571329B0A30D00079505 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0476571229B0A30D00079505 /* SwiftUIView.swift */; };
 		0476571529B34D4000079505 /* GroupRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0476571429B34D4000079505 /* GroupRequestView.swift */; };
+		0476571829B376E000079505 /* SearchDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0476571729B376E000079505 /* SearchDetailView.swift */; };
 		04853DD029A5BB3C0075D35F /* ButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04853DCF29A5BB3C0075D35F /* ButtonLabel.swift */; };
 		04853DD429A5DD730075D35F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04853DD329A5DD730075D35F /* HomeView.swift */; };
 		04853DD729A5E1FD0075D35F /* NoItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04853DD629A5E1FD0075D35F /* NoItemView.swift */; };
@@ -64,6 +65,7 @@
 		0441541929A484C80057BA67 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		0476571229B0A30D00079505 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		0476571429B34D4000079505 /* GroupRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupRequestView.swift; sourceTree = "<group>"; };
+		0476571729B376E000079505 /* SearchDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchDetailView.swift; sourceTree = "<group>"; };
 		04853DCF29A5BB3C0075D35F /* ButtonLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonLabel.swift; sourceTree = "<group>"; };
 		04853DD329A5DD730075D35F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		04853DD629A5E1FD0075D35F /* NoItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoItemView.swift; sourceTree = "<group>"; };
@@ -172,6 +174,7 @@
 		0441540429A372BC0057BA67 /* views */ = {
 			isa = PBXGroup;
 			children = (
+				0476571629B376B700079505 /* search */,
 				042CEFCA29AD86CF007DAB6C /* group */,
 				04853DD529A5E1EE0075D35F /* common */,
 				0441541429A46AF20057BA67 /* auth */,
@@ -179,7 +182,6 @@
 				0441540729A38A0A0057BA67 /* WelcomeUserView.swift */,
 				0441541729A472E70057BA67 /* ViewHolder.swift */,
 				04853DD329A5DD730075D35F /* HomeView.swift */,
-				042CEFD329AF31F4007DAB6C /* SearchGroupsView.swift */,
 				0476571229B0A30D00079505 /* SwiftUIView.swift */,
 			);
 			path = views;
@@ -210,6 +212,15 @@
 				04853DCF29A5BB3C0075D35F /* ButtonLabel.swift */,
 			);
 			path = auth;
+			sourceTree = "<group>";
+		};
+		0476571629B376B700079505 /* search */ = {
+			isa = PBXGroup;
+			children = (
+				042CEFD329AF31F4007DAB6C /* SearchGroupsView.swift */,
+				0476571729B376E000079505 /* SearchDetailView.swift */,
+			);
+			path = search;
 			sourceTree = "<group>";
 		};
 		04853DD529A5E1EE0075D35F /* common */ = {
@@ -311,6 +322,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0476571329B0A30D00079505 /* SwiftUIView.swift in Sources */,
+				0476571829B376E000079505 /* SearchDetailView.swift in Sources */,
 				0441540F29A38B210057BA67 /* Extension.swift in Sources */,
 				04853DD429A5DD730075D35F /* HomeView.swift in Sources */,
 				042CEFCC29AD8705007DAB6C /* GroupInfoView.swift in Sources */,

@@ -11,7 +11,6 @@ struct GroupRequestView: View {
     @ObservedObject var userVm: UserSocketViewModel
     @Environment(\.dismiss) var dismiss
     @State private var isEditing = false
-   // @State private var icon = "circle"
     @State private var selections: Set<String> = []
     @State private var showActions = false
     @State private var requests: [JoinRequestIncoming] = []
@@ -58,6 +57,7 @@ struct GroupRequestView: View {
             } message: {
                 Text("Choose what action to perform")
             }
+            .embedZstack()
         }
     }
     

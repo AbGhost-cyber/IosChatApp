@@ -14,76 +14,69 @@ struct GroupInfoView: View {
     @State private var showGroupRequestSheet = false
     
     var body: some View {
-        ZStack {
-            Rectangle().fill(Color.primary.opacity(0.1))
-                .ignoresSafeArea(.all)
+        List {
+            groupProfileView
             
-            List {
-                groupProfileView
-                
-                Section {
-                    HStack {
-                        iconText("audio", icon: "phone.fill")
-                        iconText("video", icon: "video.fill")
-                        iconText("search", icon: "magnifyingglass")
-                    }
-                }.hideRowSeperator(with: .secondary.opacity(0.1))
-                
-                Section {
-                    ExpandableText(group.groupDesc, lineLimit: 3)
-                        .font(.secondaryMedium)
-                        .padding(10.0)
-                }.hideRowSeperator(with: .secondary.opacity(0.1))
-                
-                if group.currentUserIsAdmin {
-                    Section {
-                        formLabel("Group Requests", icon: "bell.fill", color: .mint, badge: String(group.requests.count))
-                    } footer: {
-                        Text("check here often to view those who are interested in joining your group:)")
-                        
-                    }.hideRowSeperator(with: .secondary.opacity(0.1))
-                        .onTapGesture {
-                            showGroupRequestSheet = true
-                        }
+            Section {
+                HStack {
+                    iconText("audio", icon: "phone.fill")
+                    iconText("video", icon: "video.fill")
+                    iconText("search", icon: "magnifyingglass")
                 }
-                
-                Section {
-                    formLabel("Starred Messages", icon: "star.fill", badge: "12")
-                }.hideRowSeperator(with: .secondary.opacity(0.1))
-                
-                Section {
-                    formLabel("Mute", icon: "speaker.slash", color: .accentColor)
-                    formLabel("Wallpaper & Sound", icon: "text.below.photo.fill", color: .pink)
-                }.listRowBackground(Color.secondary.opacity(0.1))
-                
-                Section {
-                    formLabel("Encryption", icon: "lock.fill", color: .accentColor, isEnc: true)
-                }.listRowBackground(Color.secondary.opacity(0.1))
-                
-                groupCountAndSearchView
-                
-                groupUsersProfileList
-                
-                dangerousZone
-                
-            }
-            .scrollContentBackground(.hidden)
+            }.hideRowSeperator(with: .secondary.opacity(0.1))
             
-        }.toolbar {
+            Section {
+                ExpandableText(group.groupDesc, lineLimit: 3)
+                    .font(.secondaryMedium)
+                    .padding(10.0)
+            }.hideRowSeperator(with: .secondary.opacity(0.1))
+            
+            if group.currentUserIsAdmin {
+                Section {
+                    formLabel("Group Requests", icon: "bell.fill", color: .mint, badge: String(group.requests.count))
+                } footer: {
+                    Text("check here often to view those who are interested in joining your group:)")
+                    
+                }.hideRowSeperator(with: .secondary.opacity(0.1))
+                    .onTapGesture {
+                        showGroupRequestSheet = true
+                    }
+            }
+            
+            Section {
+                formLabel("Starred Messages", icon: "star.fill", badge: "12")
+            }.hideRowSeperator(with: .secondary.opacity(0.1))
+            
+            Section {
+                formLabel("Mute", icon: "speaker.slash", color: .accentColor)
+                formLabel("Wallpaper & Sound", icon: "text.below.photo.fill", color: .pink)
+            }.listRowBackground(Color.secondary.opacity(0.1))
+            
+            Section {
+                formLabel("Encryption", icon: "lock.fill", color: .accentColor, isEnc: true)
+            }.listRowBackground(Color.secondary.opacity(0.1))
+            
+            groupCountAndSearchView
+            
+            groupUsersProfileList
+            
+            dangerousZone
+            
+        }
+        .scrollContentBackground(.hidden)
+        .toolbar {
             ToolbarItem(placement: .principal) {
                 Text("Group info")
                     .font(.primaryBold)
                     .foregroundColor(.primary)
             }
-            if let group = userVm.selectedGroup {
-                if group.currentUserIsAdmin {
-                    ToolbarItem {
-                        Button {
-                            
-                        } label: {
-                            Image(systemName: "pencil")
-                                .foregroundColor(.primary)
-                        }
+            if let isAdmin = userVm.selectedGroup?.currentUserIsAdmin {
+                ToolbarItem {
+                    Button {
+                        
+                    } label: {
+                        Image(systemName: "pencil")
+                            .foregroundColor(.primary)
                     }
                 }
             }
@@ -97,10 +90,9 @@ struct GroupInfoView: View {
         .sheet(isPresented: $showGroupRequestSheet) {
             GroupRequestView(userVm: userVm)
         }
+        .embedZstack()
+        
     }
-    
-    
-    
     
     private var groupUsersProfileList: some View {
         Section {

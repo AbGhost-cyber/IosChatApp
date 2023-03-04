@@ -88,6 +88,17 @@ class SearchViewModel: ObservableObject {
         self.userGroups = groups
     }
     
+    func isUserGroup(groupId: String) -> Bool {
+       let showGroupDetails = !userIsGroupMember(groupdId: groupId)
+        
+        if showGroupDetails {
+            self.selectedSearchData = searchedGroups
+                .first(where: {$0.groupId == groupId})
+            return false
+        }
+        return true
+    }
+    
     
     func searchChats() async {
         let searchedQuery = trimmedQuery

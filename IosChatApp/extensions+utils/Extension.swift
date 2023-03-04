@@ -240,15 +240,19 @@ extension Date {
 }
 
 extension View {
-    func overlayWithBg() -> some View {
-        return self
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.primary.opacity(0.1))
-    }
-    
+  
     func hideRowSeperator(with bgColor: Color = .clear) -> some View {
         return self
             .listRowSeparator(.hidden)
             .listRowBackground(bgColor)
+    }
+    
+    func embedZstack() -> some View {
+        return ZStack {
+            Rectangle()
+                .fill(Color.secondary.opacity(0.1))
+                .ignoresSafeArea(.all)
+            self
+        }
     }
 }

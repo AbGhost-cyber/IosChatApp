@@ -14,39 +14,35 @@ struct HomeView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack {
-                Rectangle().fill(Color.primary.opacity(0.1))
-                    .ignoresSafeArea(.all)
-                groupListView
-                    .scrollContentBackground(.hidden)
-                    .listStyle(.plain)
-                    .navigationDestination(isPresented: $userSocketVm.navigateToCreatedGroup) {
-                        if userSocketVm.selectedGroup != nil {
-                            GroupChatView(userVm: userSocketVm)
-                        }
+            groupListView
+                .scrollContentBackground(.hidden)
+                .listStyle(.plain)
+                .navigationDestination(isPresented: $userSocketVm.navigateToCreatedGroup) {
+                    if userSocketVm.selectedGroup != nil {
+                        GroupChatView(userVm: userSocketVm)
                     }
-                    .toolbar {
-                        createGroupIcon
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            EditButton()
-                                .foregroundColor(.primary)
-                                .font(.primaryBold)
-                        }
-                        onlineStatus
+                }
+                .toolbar {
+                    createGroupIcon
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        EditButton()
+                            .foregroundColor(.primary)
+                            .font(.primaryBold)
                     }
-                    .overlay { overlayView }
-                    .sheet(isPresented: $showCreateGroupSheet) {
-                        CreateGroupView(userVm: userSocketVm)
-                    }
-                    .searchable(text: $searchVm.keyword, prompt: "Search Groups")
-                    .searchScopes($searchVm.scope) {
-                        Text("group").tag(SearchScope.group)
-                        Text("chat").tag(SearchScope.chat)
-                    }
-                    .task { doOnStart() }
-                    .refreshable { doOnStart() }
-                       
-            }
+                    onlineStatus
+                }
+                .overlay { overlayView }
+                .sheet(isPresented: $showCreateGroupSheet) {
+                    CreateGroupView(userVm: userSocketVm)
+                }
+                .searchable(text: $searchVm.keyword, prompt: "Search Groups")
+                .searchScopes($searchVm.scope) {
+                    Text("group").tag(SearchScope.group)
+                    Text("chat").tag(SearchScope.chat)
+                }
+                .task { doOnStart() }
+                .refreshable { doOnStart() }
+                .embedZstack()
         }
     }
     

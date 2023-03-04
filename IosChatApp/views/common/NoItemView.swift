@@ -15,13 +15,13 @@ struct NoItemView: View {
             .foregroundColor(Color(uiColor: .secondaryLabel))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .multilineTextAlignment(.center)
-            .background(Color.secondary.opacity(0.1))
+            .embedZstack()
     }
 }
 
 struct NoItemView_Previews: PreviewProvider {
     static var previews: some View {
         NoItemView()
-            .preferredColorScheme(.dark)
+            .preferredColorScheme(.light)
     }
 }

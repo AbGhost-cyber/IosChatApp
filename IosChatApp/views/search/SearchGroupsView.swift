@@ -22,8 +22,7 @@ struct SearchGroupsView: View {
     }
     
     var body: some View {
-        ZStack {
-            groupListView
+        groupListView
             .scrollContentBackground(.hidden)
             .listStyle(.plain)
             .overlay { groupListSearchOverlay }
@@ -31,61 +30,13 @@ struct SearchGroupsView: View {
                 await searchVM.searchGroups()
             }
             .sheet(isPresented: $showGroupDetails) {
-                groupDetailView
-                    .padding()
-                    .presentationDetents([.medium])
+                SearchDetailView(searchVM: searchVM, onJoinGroup: { groupId in
+                    await userVm.requestGroupJoin(groupId: groupId)
+                })
+                .presentationDetents([.medium])
+                .padding(.horizontal)
             }
-        }
-    }
-    
-    @ViewBuilder
-    private var groupDetailView: some View {
-        if let selectedGroupSearch = searchVM.selectedSearchData {
-            VStack(spacing: 10) {
-                GroupIcon(size: 120, icon: selectedGroupSearch.groupIcon, font: .groupIconMini1)
-                Text(selectedGroupSearch.groupName)
-                    .foregroundColor(.primary)
-                    .font(.welcome)
-                    .multilineTextAlignment(.center)
-                    .padding(.top)
-                Text("Created on \(Date(milliseconds: selectedGroupSearch.dateCreated).customFormat)")
-                    .font(.secondaryLarge)
-                    .foregroundColor(.secondary)
-                    .padding(.top)
-                Text("\(selectedGroupSearch.users) member(s)")
-                    .font(.secondaryLarge)
-                    .foregroundColor(.accentColor)
-                AsyncButton {
-                    await userVm.requestGroupJoin(groupId: selectedGroupSearch.groupId)
-                } label: {
-                    VStack {
-                        Text("Join Group")
-                            .foregroundColor(.white)
-                            .font(.primaryBold2)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: 60)
-                    .background(.primary.opacity(0.7))
-                    .cornerRadius(12.0)
-                    .padding(.top)
-                }
-
-            }
-            .overlay(alignment: .topTrailing) {
-                Image(systemName: "xmark")
-                    .imageScale(.large)
-                    .foregroundColor(.secondary)
-                    .bold()
-                    .padding(10)
-                    .overlay {
-                        Circle().fill(Color.primary.opacity(0.15))
-                    }
-                    .offset(y: -40)
-                    .onTapGesture { dismiss() }
-                    
-            }
-        } else {
-            Text("didn't fetch")
-        }
+            .embedZstack()
     }
     func highlightedText(str: String, searched: String) -> Text {
         guard !str.isEmpty && !searched.isEmpty else { return Text(str) }
@@ -127,18 +78,9 @@ struct SearchGroupsView: View {
                 }
             }
             .onTapGesture {
-                print("tapped group")
-                showGroupDetails = !searchVM.userIsGroupMember(groupdId: group.groupId)
-                if showGroupDetails {
-                    searchVM.selectedSearchData = group
-                    return
-                }
-                if let selectedGroup = userVm.getGroupById(group.groupId) {
-                    userVm.selectedGroup = selectedGroup
-                    userVm.groupScrollPostion = selectedGroup.messages.lastIndex(where: {$0.message.contains(group.foundText)}) ?? 0
-                    userVm.useVmScrollPos = true
+                if searchVM.isUserGroup(groupId: group.groupId) {
                     dismissSearch()
-                    userVm.navigateToCreatedGroup = true
+                    userVm.handleSearchNavigation(groupId: group.groupId, foundText: group.foundText)
                 }
             }
             .listRowBackground(Color.clear)
@@ -150,13 +92,11 @@ struct SearchGroupsView: View {
         switch searchVM.phase {
         case .failure(let error):
             NoItemView(text: error.localizedDescription)
-                .overlayWithBg()
         case .empty:
             NoItemView(text: searchVM.emptyListText)
-                .overlayWithBg()
         case .fetching:
             ProgressView()
-                .overlayWithBg()
+                .embedZstack()
         default: EmptyView()
         }
     }
@@ -168,7 +108,7 @@ struct SearchGroupsView_Previews: PreviewProvider {
             searchVM: SearchViewModel(),
             userVm: UserSocketViewModel()
         )
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(.light)
     }
 }
 

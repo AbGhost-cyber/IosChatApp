@@ -34,7 +34,6 @@ struct GroupChatView: View {
                             }
                             
                         }
-                        
                     }
                 }.onTapGesture {
                     msgFieldIsFocused = false
@@ -44,22 +43,7 @@ struct GroupChatView: View {
             }
             .toolbar {
                 if let group = userVm.selectedGroup {
-                    
-                    ToolbarItem(placement: .principal) {
-                        NavigationLink {
-                            GroupInfoView(userVm: userVm)
-                        } label: {
-                            VStack(spacing: 3) {
-                                Text(group.groupName)
-                                    .foregroundColor(.primary)
-                                    .font(.primaryBold2)
-                                Text("\(group.users.count) members")
-                                    .foregroundColor(.primary.opacity(0.5))
-                                    .font(.secondaryText)
-                            }
-                        }
-                    }
-                    
+                    groupInfo(group: group)
                     ToolbarItem {
                         GroupIcon(size: 40, icon: group.groupIcon, font: .groupIconMini2)
                             .padding(.bottom, 3)
@@ -74,7 +58,6 @@ struct GroupChatView: View {
                     }
                 }
             }
-            
         }
     }
     
@@ -85,6 +68,24 @@ struct GroupChatView: View {
                 proxy.scrollTo(index ?? 0, anchor: .bottom)
             }
             userVm.useVmScrollPos = false
+        }
+    }
+    
+    
+    private func groupInfo(group: Group) -> some ToolbarContent {
+        ToolbarItem(placement: .principal) {
+            NavigationLink {
+                GroupInfoView(userVm: userVm)
+            } label: {
+                VStack(spacing: 3) {
+                    Text(group.groupName)
+                        .foregroundColor(.primary)
+                        .font(.primaryBold2)
+                    Text("\(group.users.count) members")
+                        .foregroundColor(.primary.opacity(0.5))
+                        .font(.secondaryText)
+                }
+            }
         }
     }
     

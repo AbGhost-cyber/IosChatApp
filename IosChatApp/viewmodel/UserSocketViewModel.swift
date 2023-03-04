@@ -110,20 +110,18 @@ class UserSocketViewModel: ObservableObject {
     }
     
     
-    func fetchGroups(isFetchOnly: Bool = false) async {
+    func fetchGroups() async {
         onlineStatus = .connecting
         do {
             let groups = try await userSocketService.fetchGroups()
             self.groups = groups
             //TODO: maybe this would be better if we save decrypted msgs to local
-            if groups.isEmpty || isFetchOnly {
+            if groups.isEmpty {
                 onlineStatus = .connected
                 return
             }
             onlineStatus = .updating
 
-
-            
             try await self.userSocketService.openGroupSocket() { error in
                 Task {
                     await self.updateUserStatus(isConnected: error == nil)
@@ -163,6 +161,17 @@ class UserSocketViewModel: ObservableObject {
         }
     }
     
+    func handleSearchNavigation(groupId: String, foundText: String) {
+        if let selectedGroup = getGroupById(groupId) {
+            self.selectedGroup = selectedGroup
+            self.groupScrollPostion = selectedGroup.messages
+                .lastIndex(where: {$0.message
+                    .lowercased().contains(foundText)}) ?? 0
+            self.useVmScrollPos = true
+            self.navigateToCreatedGroup = true
+        }
+    }
+    
     func requestGroupJoin(groupId: String) async {
         do {
             let publicKey = try security.generateUserPukForGroup(with: groupId)
@@ -198,8 +207,11 @@ class UserSocketViewModel: ObservableObject {
     }
     
     func decryptAllMsgs() {
-        var mGroups = groups
-        if mGroups.isEmpty { return }
+        var mGroups = self.groups
+        if mGroups.isEmpty {
+            self.decryptedGroups = []
+            return
+        }
         for index in mGroups.indices {
             var group = mGroups[index]
             group.messages = decryptedGrpMsgs(for: group)
