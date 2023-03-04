@@ -23,10 +23,11 @@ struct Group: Codable, Identifiable, Hashable {
     let groupUrl: String
     let dateCreated: Int64
     let users: [String]
-    let requests: [JoinRequest]
+    let requests: [JoinRequestIncoming]
     var messages: [IncomingMessage]
     let currentUserIsAdmin: Bool
     let id: String
+    let adminName: String
     let updatedTime: Int
 }
 
@@ -51,10 +52,14 @@ struct SearchData {
     let foundText: String
 }
 
-struct JoinRequest: Codable {
+struct JoinRequestOutGoing: Codable {
     let publicKey: [UInt8]
+    let groupId: String
 }
-
+struct JoinRequestIncoming: Codable {
+    let publicKey: [UInt8]
+    let username: String
+}
 //this would change in the future, we will have two different, one for incoming and other for outgoing
 struct IncomingMessage: Codable, Identifiable, Hashable {
     let name: String
@@ -71,6 +76,13 @@ struct CreateGroupRequest: Codable {
     let groupName: String
     let groupDesc: String
     let groupIcon: String
+}
+
+struct GroupAcceptResponse: Decodable {
+    let username: String
+    let groupId: String
+    let publicKey: [UInt8]
+    
 }
 
 enum WebResponse {

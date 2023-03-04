@@ -43,18 +43,24 @@ struct HomeView: View {
                         Text("group").tag(SearchScope.group)
                         Text("chat").tag(SearchScope.chat)
                     }
-                    .task {
-                        Task {
-                            await userSocketVm.fetchGroups()
-                        }
-                        Task {
-                            await userSocketVm.listenForMessages()
-                        }
-                    }
-                    .refreshable {
-                        await userSocketVm.fetchGroups(isFetchOnly: true)
-                    }
+                    .task { doOnStart() }
+                    .refreshable { doOnStart() }
+                       
             }
+        }
+    }
+    
+    private func doOnStart() {
+        Task {
+            await userSocketVm.fetchGroups()
+        }
+        
+        Task {
+            await userSocketVm.fetchUserGroupCreds()
+        }
+        
+        Task {
+            await userSocketVm.listenForMessages()
         }
     }
     

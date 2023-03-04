@@ -14,6 +14,8 @@ protocol UserSocketService {
     func onGroupChange(callback: @escaping(Group) -> Void) async
     func sendMessage(text: String, groupId: String) async throws
     func searchGroups(with keyword: String) async throws -> [SearchGroupResponse]
+    func joinGroup(with request: JoinRequestOutGoing) async throws -> String
+    func fetchGroupCred() async throws -> [GroupAcceptResponse]
 }
 
 class UserSocketImpl: UserSocketService {
@@ -113,5 +115,29 @@ class UserSocketImpl: UserSocketService {
             return groups
         }
        throw ServiceError.decodingError
+    }
+    
+   
+    
+    func joinGroup(with request: JoinRequestOutGoing) async throws -> String {
+        let url = try URL.getUrlString(urlString: EndPoints.JoinGroup.url)
+        var urlRequest = try URLRequest.requestWithToken(url: url, addAppHeader: true)
+        urlRequest.httpMethod = "POST"
+        urlRequest.httpBody = try JSONEncoder().encode(request)
+        let (data, _) = try await session.data(for: urlRequest)
+        if let response = String(data: data, encoding: .utf8) {
+            return response
+        }
+        throw ServiceError.decodingError
+    }
+    
+    func fetchGroupCred() async throws -> [GroupAcceptResponse] {
+        let url = try URL.getUrlString(urlString: EndPoints.Groupcred.url)
+        let request = try URLRequest.requestWithToken(url: url, addAppHeader: true)
+        let (data, _) = try await session.data(for: request)
+        if let credentials = try? JSONDecoder().decode([GroupAcceptResponse].self, from: data) {
+            return credentials
+        }
+        throw ServiceError.decodingError
     }
 }

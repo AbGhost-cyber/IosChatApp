@@ -33,4 +33,11 @@ extension EndPoints {
     static var SearchGroup: EndPoints {
         return EndPoints(url: "\(HTTP_URL)/groups/search")
     }
+    static var JoinGroup: EndPoints {
+        EndPoints(url: "\(HTTP_URL)/join/group")
+    }
+    
+    static var Groupcred: EndPoints {
+        EndPoints(url: "\(HTTP_URL)/fetchGroupCred")
+    }
 }

@@ -17,6 +17,7 @@ enum ServiceError: Error {
     case unknownError
     case tokenNotFound
     case decodingError
+    case encodingError
 }
 
 protocol AuthService {

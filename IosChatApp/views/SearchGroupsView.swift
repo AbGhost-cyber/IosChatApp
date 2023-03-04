@@ -13,6 +13,7 @@ struct SearchGroupsView: View {
     @State private var showGroupDetails = false
     @State private var showGroupChat = false
     @Environment(\.dismissSearch) var dismissSearch
+    @Environment(\.dismiss) var dismiss
     
     init(searchVM: SearchViewModel, userVm: UserSocketViewModel) {
         self.searchVM = searchVM
@@ -55,7 +56,7 @@ struct SearchGroupsView: View {
                     .font(.secondaryLarge)
                     .foregroundColor(.accentColor)
                 AsyncButton {
-                    
+                    await userVm.requestGroupJoin(groupId: selectedGroupSearch.groupId)
                 } label: {
                     VStack {
                         Text("Join Group")
@@ -79,6 +80,8 @@ struct SearchGroupsView: View {
                         Circle().fill(Color.primary.opacity(0.15))
                     }
                     .offset(y: -40)
+                    .onTapGesture { dismiss() }
+                    
             }
         } else {
             Text("didn't fetch")

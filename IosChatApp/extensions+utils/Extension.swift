@@ -84,16 +84,16 @@ extension Group {
         [
             Group(groupId: "12", groupIcon: "👧🏾", groupName: "Android Developers",
                   groupDesc: "Android things", groupUrl: "", dateCreated: 12,
-                  users: ["Ab", "Ud", "Joseph", "Aloy", "Aloy5", "Aloy2", "Aloy111", "Aloy12", "Aloy1", "Aloy33"], requests: [], messages: [], currentUserIsAdmin: true, id: "124", updatedTime: 12),
+                  users: ["Ab", "Ud", "Joseph", "Aloy", "Aloy5", "Aloy2", "Aloy111", "Aloy12", "Aloy1", "Aloy33"], requests: [JoinRequestIncoming(publicKey: [], username: "paul"), JoinRequestIncoming(publicKey: [], username: "felix")], messages: [], currentUserIsAdmin: true, id: "124", adminName: "Ab", updatedTime: 12),
             Group(groupId: "12", groupIcon: "J", groupName: "Jesus my role model",
                   groupDesc: "Android things", groupUrl: "", dateCreated: 12,
-                  users: [], requests: [], messages: [], currentUserIsAdmin: false, id: "123", updatedTime: 12),
+                  users: [], requests: [], messages: [], currentUserIsAdmin: false, id: "123", adminName: "Ab", updatedTime: 12),
             Group(groupId: "12", groupIcon: "👧🏾", groupName: "TRUTH OF THE WORD",
                   groupDesc: "Android things", groupUrl: "", dateCreated: 12,
-                  users: [], requests: [], messages: [], currentUserIsAdmin: false, id: "12", updatedTime: 12),
+                  users: [], requests: [], messages: [], currentUserIsAdmin: false, id: "12", adminName: "Ab", updatedTime: 12),
             Group(groupId: "12", groupIcon: "👧🏾", groupName: "Android Developers",
                   groupDesc: "Android things", groupUrl: "", dateCreated: 12,
-                  users: [], requests: [], messages: [], currentUserIsAdmin: false, id: "12345", updatedTime: 12)
+                  users: [], requests: [], messages: [], currentUserIsAdmin: false, id: "12345", adminName: "Ab",updatedTime: 12)
         ]
     }
     

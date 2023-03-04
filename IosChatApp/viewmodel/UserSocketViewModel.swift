@@ -16,7 +16,7 @@ enum ConnState {
     var text: String {
         switch self {
         case .connecting:
-            return "Connecting"
+            return "Connecting..."
         case .connected:
             return "Chats"
         case .disconnected:
@@ -160,6 +160,27 @@ class UserSocketViewModel: ObservableObject {
             self.userMessage = error.localizedDescription
             self.hasError = true
             print("createGroup: \(error.localizedDescription)")
+        }
+    }
+    
+    func requestGroupJoin(groupId: String) async {
+        do {
+            let publicKey = try security.generateUserPukForGroup(with: groupId)
+            print("generated public key: \(publicKey)")
+            let request = JoinRequestOutGoing(publicKey: publicKey, groupId: groupId)
+            let response = try await userSocketService.joinGroup(with: request)
+            print(response)
+        } catch {
+            print("request group: \(error.localizedDescription)")
+        }
+    }
+    
+    func fetchUserGroupCreds() async {
+        do {
+            let response = try await userSocketService.fetchGroupCred()
+            print(response)
+        } catch {
+            print("fetch credentials: \(error.localizedDescription)")
         }
     }
     

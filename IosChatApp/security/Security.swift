@@ -24,10 +24,10 @@ protocol Security {
     func fetchKeyByGroupId(_ id: String) throws -> String
     func updateKeyByGroupId(_ id: String) throws
     func generateKeyForGroup(with id: String)
-    func generateUserRSAPrivateKeyForGroup(with id: String) throws -> [UInt8]
+    func generateUserPukForGroup(with id: String) throws -> [UInt8]
     func fetchUserRSAPrivateKeyForGroup(with id: String) throws -> Data
     func exchangeGroupkeyAsymmetric(with groupId: String, and userPublicKey: [UInt8]) throws -> [UInt8]
-    func decryptAdminSymmetryForUser(with encryptedGroupKey: [UInt8], and groupId: String) throws -> String
+    func decryptAdminSymmetryKey(with encryptedGroupKey: [UInt8], and groupId: String) throws
     func encryptMessage(_ text: String, for groupId: String) throws -> String
     func decryptMessage(_ text: String, for groupId: String) throws -> String
 }
@@ -64,7 +64,6 @@ class SecurityImpl: Security {
         userCredentials[id] = encryptedGroupKey
         // save changes to user defaults
         userDefaults.set(userCredentials, forKey: secKey)
-        print("key generated: \(encryptedGroupKey)")
     }
     
    private func groupCredExists(id: String) -> Bool {
@@ -114,7 +113,7 @@ class SecurityImpl: Security {
     }
     
     //called when the user wants to join the group, sends this with the request
-    func generateUserRSAPrivateKeyForGroup(with id: String) throws ->[UInt8] {
+    func generateUserPukForGroup(with id: String) throws ->[UInt8] {
         let userSecretKey = try RSA(keySize: 1024)
         if rsaKeyForGroup(id: id) {
             throw SecurityException.alreadyGenPublicKey
@@ -141,14 +140,15 @@ class SecurityImpl: Security {
     }
     
     // user attempts to decrypt the admin's symmetric key via his private key RSA
-    func decryptAdminSymmetryForUser(with encryptedGroupKey: [UInt8], and groupId: String) throws -> String {
+    func decryptAdminSymmetryKey(with encryptedGroupKey: [UInt8], and groupId: String) throws {
         if encryptedGroupKey.isEmpty {
             throw SecurityException.adminRSAEncryptEmpty
         }
         let userSecretKey = try RSA(rawRepresentation: fetchUserRSAPrivateKeyForGroup(with: groupId))
         let originalDecryptedData = try userSecretKey.decrypt(encryptedGroupKey)
         if let groupSymmetricKey = String(data: Data(originalDecryptedData), encoding: .utf8) {
-            return groupSymmetricKey
+            userCredentials[groupId] = groupSymmetricKey
+            return
         }
         throw SecurityException.userGroupKeyDecryptError
     }
