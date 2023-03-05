@@ -13,9 +13,6 @@ struct GroupChatView: View {
     @FocusState private var msgFieldIsFocused: Bool
     
     var body: some View {
-        ZStack {
-            Rectangle().fill(Color.primary.opacity(0.1))
-                .ignoresSafeArea(.all)
             VStack {
                 ScrollView(showsIndicators: false) {
                     ScrollViewReader { scrollProxy in
@@ -32,7 +29,7 @@ struct GroupChatView: View {
                                     scrollToLastMessage(proxy: scrollProxy)
                                 }
                             }
-                            
+
                         }
                     }
                 }.onTapGesture {
@@ -58,7 +55,7 @@ struct GroupChatView: View {
                     }
                 }
             }
-        }
+            .embedZstack()
     }
     
     private func scrollToLastMessage(proxy: ScrollViewProxy) {

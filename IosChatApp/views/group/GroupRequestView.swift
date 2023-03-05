@@ -11,9 +11,10 @@ struct GroupRequestView: View {
     @ObservedObject var userVm: UserSocketViewModel
     @Environment(\.dismiss) var dismiss
     @State private var isEditing = false
-    @State private var selections: Set<String> = []
+    @State private var selections: Set<JoinRequestIncoming> = []
     @State private var showActions = false
     @State private var requests: [JoinRequestIncoming] = []
+    @State private var hasError: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -46,12 +47,19 @@ struct GroupRequestView: View {
                     requests = selectedGroup.requests
                 }
             }
+            .alert("Error", isPresented: $hasError) {
+                Button(role: .cancel, action: {}) {
+                    Text("OK")
+                }
+            } message: {
+                Text(userVm.userMessage)
+            }
             .confirmationDialog("Choose Action", isPresented: $showActions) {
                 Button("Accept request") {
-                    
+                    handleRequest(.accept)
                 }
                 Button("Reject request") {
-                    
+                    handleRequest(.reject)
                 }
                 Button("Cancel", role: .cancel, action: {})
             } message: {
@@ -61,10 +69,27 @@ struct GroupRequestView: View {
         }
     }
     
+    private func handleRequest(_ action: RequestAction) {
+        if selections.isEmpty { return }
+        var updatedRequests:[JoinRequestIncoming] = []
+        Task {
+            for request in selections {
+              updatedRequests = await userVm.handleAdminGroupRequest(
+                with: action, joinReq: request
+              )
+            }
+            self.isEditing = false
+            self.selections = []
+            if !userVm.hasError {
+                self.requests = updatedRequests
+            }
+        }
+    }
+    
     
     private var requestList: some View {
         List(requests, id: \.username) { request in
-            let isSelected = selections.contains(request.username)
+            let isSelected = selections.contains(request)
             let icon = isSelected ? "checkmark.circle.fill" : "circle"
             HStack {
                 if isEditing {
@@ -72,9 +97,9 @@ struct GroupRequestView: View {
                         .foregroundColor(.accentColor)
                         .onTapGesture {
                             if isSelected {
-                                selections.remove(request.username)
+                                selections.remove(request)
                             }else {
-                                selections.insert(request.username)
+                                selections.insert(request)
                             }
                         }
                 }

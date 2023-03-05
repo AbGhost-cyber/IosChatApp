@@ -17,7 +17,6 @@ enum SecurityException: Error {
     case userPrivateKeyNotFound
     case userPkeyEmpty
     case adminRSAEncryptEmpty
-    case alreadyGenPublicKey
     case msgDecryptError
 }
 protocol Security {
@@ -116,7 +115,8 @@ class SecurityImpl: Security {
     func generateUserPukForGroup(with id: String) throws ->[UInt8] {
         let userSecretKey = try RSA(keySize: 1024)
         if rsaKeyForGroup(id: id) {
-            throw SecurityException.alreadyGenPublicKey
+            let userSecretKey = try RSA(rawRepresentation: fetchUserRSAPrivateKeyForGroup(with: id))
+            return try userSecretKey.publicKeyExternalRepresentation().bytes
         }
         let encryptedUserSecretKey = try userSecretKey.externalRepresentation().bytes.toBase64()
         userRSAPrivateKeys[id] = encryptedUserSecretKey

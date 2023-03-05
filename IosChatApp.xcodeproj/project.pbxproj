@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0408F65329B45DF900382DE0 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0408F65229B45DF900382DE0 /* ErrorView.swift */; };
 		042CEFCC29AD8705007DAB6C /* GroupInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042CEFCB29AD8705007DAB6C /* GroupInfoView.swift */; };
 		042CEFCE29AE1416007DAB6C /* ExpandableText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042CEFCD29AE1416007DAB6C /* ExpandableText.swift */; };
 		042CEFD029AEF24A007DAB6C /* Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042CEFCF29AEF24A007DAB6C /* Endpoints.swift */; };
@@ -26,7 +27,6 @@
 		0441541629A46B050057BA67 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441541529A46B050057BA67 /* LoginView.swift */; };
 		0441541829A472E70057BA67 /* ViewHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441541729A472E70057BA67 /* ViewHolder.swift */; };
 		0441541A29A484C80057BA67 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441541929A484C80057BA67 /* AuthViewModel.swift */; };
-		0476571329B0A30D00079505 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0476571229B0A30D00079505 /* SwiftUIView.swift */; };
 		0476571529B34D4000079505 /* GroupRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0476571429B34D4000079505 /* GroupRequestView.swift */; };
 		0476571829B376E000079505 /* SearchDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0476571729B376E000079505 /* SearchDetailView.swift */; };
 		04853DD029A5BB3C0075D35F /* ButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04853DCF29A5BB3C0075D35F /* ButtonLabel.swift */; };
@@ -43,6 +43,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0408F65229B45DF900382DE0 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		042CEFCB29AD8705007DAB6C /* GroupInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInfoView.swift; sourceTree = "<group>"; };
 		042CEFCD29AE1416007DAB6C /* ExpandableText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableText.swift; sourceTree = "<group>"; };
 		042CEFCF29AEF24A007DAB6C /* Endpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoints.swift; sourceTree = "<group>"; };
@@ -63,7 +64,6 @@
 		0441541529A46B050057BA67 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		0441541729A472E70057BA67 /* ViewHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewHolder.swift; sourceTree = "<group>"; };
 		0441541929A484C80057BA67 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
-		0476571229B0A30D00079505 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		0476571429B34D4000079505 /* GroupRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupRequestView.swift; sourceTree = "<group>"; };
 		0476571729B376E000079505 /* SearchDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchDetailView.swift; sourceTree = "<group>"; };
 		04853DCF29A5BB3C0075D35F /* ButtonLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonLabel.swift; sourceTree = "<group>"; };
@@ -182,7 +182,6 @@
 				0441540729A38A0A0057BA67 /* WelcomeUserView.swift */,
 				0441541729A472E70057BA67 /* ViewHolder.swift */,
 				04853DD329A5DD730075D35F /* HomeView.swift */,
-				0476571229B0A30D00079505 /* SwiftUIView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -231,6 +230,7 @@
 				04AF614529A9CBD2000DA717 /* GroupIcon.swift */,
 				04AF614729ABC063000DA717 /* AsyncButton.swift */,
 				042CEFCD29AE1416007DAB6C /* ExpandableText.swift */,
+				0408F65229B45DF900382DE0 /* ErrorView.swift */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -321,11 +321,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0476571329B0A30D00079505 /* SwiftUIView.swift in Sources */,
 				0476571829B376E000079505 /* SearchDetailView.swift in Sources */,
 				0441540F29A38B210057BA67 /* Extension.swift in Sources */,
 				04853DD429A5DD730075D35F /* HomeView.swift in Sources */,
 				042CEFCC29AD8705007DAB6C /* GroupInfoView.swift in Sources */,
+				0408F65329B45DF900382DE0 /* ErrorView.swift in Sources */,
 				04853DD029A5BB3C0075D35F /* ButtonLabel.swift in Sources */,
 				0441540629A372F10057BA67 /* SignupView.swift in Sources */,
 				04AF614429A9CAA4000DA717 /* GroupChatView.swift in Sources */,

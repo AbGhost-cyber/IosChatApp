@@ -12,9 +12,10 @@ class AuthViewModel: ObservableObject {
     
     @Published var loginSucceed: Bool = false
     @Published var showUserMessage: Bool = false
-    @Published var userMessage: String = "" {
+    @Published var alertTitle: String = ""
+    @Published var alertMsg: String = "" {
         didSet {
-            showUserMessage = !userMessage.isEmpty
+            showUserMessage = !alertMsg.isEmpty
         }
     }
     @Published var isLoading = false
@@ -33,12 +34,14 @@ class AuthViewModel: ObservableObject {
         self.isLoading = true
         let isValid = !password.isEmpty && !username.isEmpty
         if !isValid {
-            self.userMessage = "required fields cannot be empty"
+            self.alertTitle = "Missing Fields ❌"
+            self.alertMsg = "required fields cannot be empty"
             return
         }
         let authRequest = AuthRequest(username: username, password: password)
         do {
             let (response, didSucceed) = try await authService.login(with: authRequest)
+            self.alertTitle = didSucceed ? "Success" : "Error"
             setLoadingAndMessage(isLoading: false, userMessage: didSucceed ? "" : response)
             defaults.set(didSucceed, forKey: "isLoggedIn")
             //save user token local
@@ -49,33 +52,38 @@ class AuthViewModel: ObservableObject {
             self.didSucceedLogin = didSucceed
         } catch {
             //TODO: catch error of authError
+            self.alertTitle = "Error"
             setLoadingAndMessage(isLoading: false, userMessage: error.localizedDescription)
         }
     }
     
     private func setLoadingAndMessage(isLoading: Bool, userMessage: String) {
         self.isLoading = isLoading
-        self.userMessage = userMessage
+        self.alertMsg = userMessage
     }
     
     func signup(username: String, password: String, repeatedPwd: String) async throws {
         if password != repeatedPwd {
-            self.userMessage = "password doesn't match"
+            self.alertTitle = "Error"
+            self.alertMsg = "password doesn't match"
             return
         }
         let isValid = !password.isEmpty && !username.isEmpty && !repeatedPwd.isEmpty
         if !isValid {
-            self.userMessage = "required fields cannot be empty"
+            self.alertTitle = "Missing Fields ❌"
+            self.alertMsg = "required fields cannot be empty"
             return
         }
         self.isLoading = true
         let authRequest = AuthRequest(username: username, password: password)
         do {
             let (response, didSucceed) = try await authService.signup(with: authRequest)
+            self.alertTitle = didSucceed ? "Success" : "Error"
             setLoadingAndMessage(isLoading: false, userMessage: response)
             self.didSucceedSignup = didSucceed
         } catch {
             //TODO: catch error of authError
+            self.alertTitle = "Error"
             setLoadingAndMessage(isLoading: false, userMessage: error.localizedDescription)
         }
     }

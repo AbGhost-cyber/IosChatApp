@@ -12,10 +12,13 @@ protocol UserSocketService {
     func openGroupSocket(callback: @escaping(Error?)-> Void) async throws
     func createGroup(with request: CreateGroupRequest) async throws -> Group
     func onGroupChange(callback: @escaping(Group) -> Void) async
+    func onGroupAccept(callback: @escaping(GroupAcceptResponse) -> Void) async
     func sendMessage(text: String, groupId: String) async throws
     func searchGroups(with keyword: String) async throws -> [SearchGroupResponse]
     func joinGroup(with request: JoinRequestOutGoing) async throws -> String
     func fetchGroupCred() async throws -> [GroupAcceptResponse]
+    func handleAdminGroupRequest(groupId:String, with request: GroupAcceptResponse?,
+                                 username: String, action: String) async throws -> [JoinRequestIncoming]
 }
 
 class UserSocketImpl: UserSocketService {
@@ -23,6 +26,7 @@ class UserSocketImpl: UserSocketService {
     private var webSocketTask: URLSessionWebSocketTask?
     private let session: URLSession = .shared
     private var groupCallback: ((Group) -> Void)?
+    private var groupAcceptCallback: ((GroupAcceptResponse) -> Void)?
     private var sockets: Dictionary<String, URLSessionWebSocketTask> = [:]
     
     func openGroupSocket(callback: @escaping(Error?)-> Void) async throws {
@@ -39,6 +43,10 @@ class UserSocketImpl: UserSocketService {
     
     func onGroupChange(callback: @escaping(Group) -> Void) async {
         groupCallback = callback
+    }
+    
+    func onGroupAccept(callback: @escaping (GroupAcceptResponse) -> Void) async {
+        groupAcceptCallback = callback
     }
     
     func fetchGroups() async throws -> [Group] {
@@ -87,6 +95,10 @@ class UserSocketImpl: UserSocketService {
                        }
                        if case .simpleResponse(let response) = result {
                            print("simple response: \(response)")
+                       }
+                       if case .groupAcceptResponse(let response) = result {
+                           guard let callback = groupAcceptCallback else { return }
+                           callback(response)
                        }
                    }else {
                        print("couldnt decode")
@@ -137,6 +149,23 @@ class UserSocketImpl: UserSocketService {
         let (data, _) = try await session.data(for: request)
         if let credentials = try? JSONDecoder().decode([GroupAcceptResponse].self, from: data) {
             return credentials
+        }
+        throw ServiceError.decodingError
+    }
+    
+    func handleAdminGroupRequest(groupId: String,
+                                 with request: GroupAcceptResponse?,
+                                 username: String, action: String) async throws -> [JoinRequestIncoming] {
+        var url = try URL.getUrlString(urlString: EndPoints.AdminGroupRequest(groupId: groupId, for: username).url)
+        url.append(queryItems: [.init(name: "action", value: action)])
+        var urlRequest = try URLRequest.requestWithToken(url: url, addAppHeader: true)
+        urlRequest.httpMethod = "POST"
+        if request != nil {
+            urlRequest.httpBody = try JSONEncoder().encode(request!)
+        }
+        let (data, _) = try await session.data(for: urlRequest)
+        if let joinRequests = try? JSONDecoder().decode([JoinRequestIncoming].self, from: data) {
+            return joinRequests
         }
         throw ServiceError.decodingError
     }

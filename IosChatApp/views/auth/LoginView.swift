@@ -76,12 +76,12 @@ struct LoginView: View {
                         
                     }
                 }
-                .alert("Error", isPresented: $authVm.showUserMessage) {
+                .alert(authVm.alertTitle, isPresented: $authVm.showUserMessage) {
                     Button(role: .cancel, action: {}) {
                         Text("OK")
                     }
                 } message: {
-                    Text(authVm.userMessage)
+                    Text(authVm.alertMsg)
                 }
                 
             }

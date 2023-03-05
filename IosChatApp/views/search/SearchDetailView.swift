@@ -40,24 +40,23 @@ struct SearchDetailView: View {
     
     @ViewBuilder
     private var details: some View {
-        if let selectedGroupSearch = Group.stub.first?.toSearchData(query: "A") {
+        if let group = selectedGroupSearch {
             VStack(spacing: 10) {
-                GroupIcon(size: 120, icon: selectedGroupSearch.groupIcon, font: .groupIconMini1)
-                Text(selectedGroupSearch.groupName)
+                GroupIcon(size: 120, icon: group.groupIcon, font: .groupIconMini1)
+                Text(group.groupName)
                     .foregroundColor(.primary)
                     .font(.welcome)
                     .multilineTextAlignment(.center)
                     .padding(.top)
-                Text("Created on \(Date(milliseconds: selectedGroupSearch.dateCreated).customFormat)")
+                Text("Created on \(Date(milliseconds: group.dateCreated).customFormat)")
                     .font(.secondaryLarge)
                     .foregroundColor(.secondary)
                     .padding(.top)
-                Text("\(selectedGroupSearch.users) member(s)")
+                Text("\(group.users) member(s)")
                     .font(.secondaryLarge)
                     .foregroundColor(.accentColor)
                 AsyncButton {
-                   // await userVm.requestGroupJoin(groupId: selectedGroupSearch.groupId)
-                    await onJoinGroup?(selectedGroupSearch.groupId)
+                    await onJoinGroup?(group.groupId)
                 } label: {
                     VStack {
                         Text("Join Group")

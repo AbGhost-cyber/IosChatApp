@@ -81,6 +81,8 @@ struct SearchGroupsView: View {
                 if searchVM.isUserGroup(groupId: group.groupId) {
                     dismissSearch()
                     userVm.handleSearchNavigation(groupId: group.groupId, foundText: group.foundText)
+                }else {
+                    showGroupDetails = true
                 }
             }
             .listRowBackground(Color.clear)

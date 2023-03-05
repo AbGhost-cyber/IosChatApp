@@ -9,8 +9,8 @@ import SwiftUI
 
 struct ViewHolder: View {
     @State private var isloggedIn = false
-    @EnvironmentObject var authVm: AuthViewModel
-    @EnvironmentObject var userSocketVm: UserSocketViewModel
+    @StateObject var authVm: AuthViewModel = .init()
+    @StateObject var userSocketVm: UserSocketViewModel = .init()
     
     var body: some View {
         ZStack {
@@ -31,7 +31,5 @@ struct ViewHolder: View {
 struct ViewHolder_Previews: PreviewProvider {
     static var previews: some View {
         ViewHolder()
-            .environmentObject(AuthViewModel())
-            .environmentObject(UserSocketViewModel())
     }
 }

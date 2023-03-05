@@ -56,7 +56,7 @@ struct JoinRequestOutGoing: Codable {
     let publicKey: [UInt8]
     let groupId: String
 }
-struct JoinRequestIncoming: Codable {
+struct JoinRequestIncoming: Codable, Hashable {
     let publicKey: [UInt8]
     let username: String
 }
@@ -78,7 +78,7 @@ struct CreateGroupRequest: Codable {
     let groupIcon: String
 }
 
-struct GroupAcceptResponse: Decodable {
+struct GroupAcceptResponse: Codable {
     let username: String
     let groupId: String
     let publicKey: [UInt8]
@@ -89,7 +89,13 @@ enum WebResponse {
     case groupResponse(Group)
     case notification(String)
     case simpleResponse(String)
+    case groupAcceptResponse(GroupAcceptResponse)
     case none
+}
+
+enum RequestAction: String {
+    case accept
+    case reject
 }
 
 extension WebResponse: Decodable {
@@ -112,6 +118,9 @@ extension WebResponse: Decodable {
         case 2:
             let data = try container.decode(String.self, forKey: .data)
             self = .simpleResponse(data)
+        case 3:
+            let data = try container.decode(GroupAcceptResponse.self, forKey: .data)
+            self = .groupAcceptResponse(data)
         default:
             self = .none
         }

@@ -73,11 +73,37 @@ class UserSocketViewModel: ObservableObject {
         }
     }
     
+    func handleAdminGroupRequest(with action: RequestAction, joinReq: JoinRequestIncoming) async -> [JoinRequestIncoming] {
+        guard let group = selectedGroup else { return [] }
+        do {
+            let encryptedGroupKey = try security.exchangeGroupkeyAsymmetric(with: group.groupId, and: joinReq.publicKey)
+            let adminRes = action == .reject ? nil : GroupAcceptResponse(username: joinReq.username, groupId: group.groupId, publicKey: encryptedGroupKey)
+            
+            let request = try await userSocketService.handleAdminGroupRequest(
+                groupId: group.groupId,
+                with: adminRes,
+                username: joinReq.username,
+                action: action.rawValue
+            )
+            return request
+        } catch SecurityException.userPkeyEmpty {
+            setErrorWithMsg("operation unsuccessful")
+            print("operation can process due to user's pkey being empty")
+        } catch SecurityException.adminKeyNotFound {
+            setErrorWithMsg("admin key not found")
+        } catch {
+            setErrorWithMsg(error.localizedDescription)
+            print("admin group request handle: \(error.localizedDescription)")
+        }
+        return []
+    }
+    
+    
     func getGroupById(_ id: String) -> Group? {
         return decryptedGroups.first(where: {$0.groupId == id})
     }
     
-    func listenForMessages() async {
+    func listenForGroupChange() async {
         await userSocketService.onGroupChange { group in
             Task {
                 guard let selectedGroup = self.selectedGroup else { return }
@@ -86,6 +112,14 @@ class UserSocketViewModel: ObservableObject {
                     self.selectedGroup?.messages = self.decryptedGrpMsgs(for: group)
                 }
                 await self.upsertGroup(group)
+            }
+        }
+    }
+    
+    func listenForGroupAccept() async {
+        await userSocketService.onGroupAccept { response in
+            Task {
+                try self.security.decryptAdminSymmetryKey(with: response.publicKey, and: response.groupId)
             }
         }
     }
@@ -121,9 +155,9 @@ class UserSocketViewModel: ObservableObject {
                 return
             }
             onlineStatus = .updating
-
             try await self.userSocketService.openGroupSocket() { error in
                 Task {
+                    self.setErrorWithMsg(hasError: error != nil)
                     await self.updateUserStatus(isConnected: error == nil)
                 }
                 if let error = error {
@@ -132,8 +166,14 @@ class UserSocketViewModel: ObservableObject {
             }
         } catch {
             print("fetchGroups error : \(error.localizedDescription)")
+            self.setErrorWithMsg(error.localizedDescription)
             onlineStatus = .disconnected
         }
+    }
+    
+    private func setErrorWithMsg(_ msg: String = "", hasError:Bool = true) {
+        self.userMessage = msg
+        self.hasError = hasError
     }
     
     func createGroup(name: String, desc: String, icon: String)  async throws {
@@ -153,10 +193,9 @@ class UserSocketViewModel: ObservableObject {
             security.generateKeyForGroup(with: newGroup.groupId)
             self.selectedGroup = newGroup
             self.navigateToCreatedGroup = true
-            self.hasError = false
+            setErrorWithMsg(hasError: false)
         } catch {
-            self.userMessage = error.localizedDescription
-            self.hasError = true
+            setErrorWithMsg(error.localizedDescription)
             print("createGroup: \(error.localizedDescription)")
         }
     }
@@ -175,21 +214,25 @@ class UserSocketViewModel: ObservableObject {
     func requestGroupJoin(groupId: String) async {
         do {
             let publicKey = try security.generateUserPukForGroup(with: groupId)
-            print("generated public key: \(publicKey)")
             let request = JoinRequestOutGoing(publicKey: publicKey, groupId: groupId)
             let response = try await userSocketService.joinGroup(with: request)
             print(response)
         } catch {
-            print("request group: \(error.localizedDescription)")
+            setErrorWithMsg(error.localizedDescription)
         }
     }
     
     func fetchUserGroupCreds() async {
         do {
             let response = try await userSocketService.fetchGroupCred()
-            print(response)
+            print("response cred: \(response)")
+            //decrypt admin stuff if request was accepted
+            for cred in response {
+                try security.decryptAdminSymmetryKey(with: cred.publicKey, and: cred.groupId)
+            }
         } catch {
             print("fetch credentials: \(error.localizedDescription)")
+            setErrorWithMsg(error.localizedDescription)
         }
     }
     

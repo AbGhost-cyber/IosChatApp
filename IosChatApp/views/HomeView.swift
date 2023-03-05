@@ -48,15 +48,18 @@ struct HomeView: View {
     
     private func doOnStart() {
         Task {
-            await userSocketVm.fetchGroups()
-        }
-        
-        Task {
             await userSocketVm.fetchUserGroupCreds()
         }
         
         Task {
-            await userSocketVm.listenForMessages()
+            await userSocketVm.fetchGroups()
+        }
+        
+        Task {
+            await userSocketVm.listenForGroupChange()
+        }
+        Task {
+            await userSocketVm.listenForGroupAccept()
         }
     }
     
@@ -94,7 +97,12 @@ struct HomeView: View {
     
     @ViewBuilder
     private var overlayView: some View {
-        if userSocketVm.decryptedGroups.isEmpty && !searchVm.isSearching {
+        if userSocketVm.hasError {
+            ErrorView(msg: userSocketVm.userMessage) {
+                doOnStart()
+            }
+        }
+        if userSocketVm.decryptedGroups.isEmpty && !searchVm.isSearching && !userSocketVm.hasError {
             NoItemView(text: "groups you've joined will appear here!")
         }
         if searchVm.isSearching {
