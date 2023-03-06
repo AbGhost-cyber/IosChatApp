@@ -71,12 +71,14 @@ struct GroupInfoView: View {
                     .foregroundColor(.primary)
             }
             if let isAdmin = userVm.selectedGroup?.currentUserIsAdmin {
-                ToolbarItem {
-                    Button {
-                        
-                    } label: {
-                        Image(systemName: "pencil")
-                            .foregroundColor(.primary)
+                if isAdmin {
+                    ToolbarItem {
+                        Button {
+                            
+                        } label: {
+                            Image(systemName: "pencil")
+                                .foregroundColor(.primary)
+                        }
                     }
                 }
             }

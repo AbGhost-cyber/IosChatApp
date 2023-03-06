@@ -84,7 +84,7 @@ extension Group {
         [
             Group(groupId: "12", groupIcon: "👧🏾", groupName: "Android Developers",
                   groupDesc: "Android things", groupUrl: "", dateCreated: 12,
-                  users: ["Ab", "Ud", "Joseph", "Aloy", "Aloy5", "Aloy2", "Aloy111", "Aloy12", "Aloy1", "Aloy33"], requests: [JoinRequestIncoming(publicKey: [], username: "paul"), JoinRequestIncoming(publicKey: [], username: "felix")], messages: [], currentUserIsAdmin: true, id: "124", adminName: "Ab", updatedTime: 12),
+                  users: ["Ab", "Ud", "Joseph", "Aloy", "Aloy5", "Aloy2", "Aloy111", "Aloy12", "Aloy1", "Aloy33"], requests: [JoinRequestIncoming(publicKey: [], username: "paul"), JoinRequestIncoming(publicKey: [], username: "felix")], messages: [IncomingMessage(name: "Ab", message: "Hey there", id: "12"), IncomingMessage(name: "Ab", message: "Hey", id: "123"),IncomingMessage(name: "Dremo", message: "Hey there", id: "1234"), IncomingMessage(name: "", message: "Admin added dremo", id: "12")], currentUserIsAdmin: true, id: "124", adminName: "Ab", updatedTime: 12),
             Group(groupId: "12", groupIcon: "J", groupName: "Jesus my role model",
                   groupDesc: "Android things", groupUrl: "", dateCreated: 12,
                   users: [], requests: [], messages: [], currentUserIsAdmin: false, id: "123", adminName: "Ab", updatedTime: 12),

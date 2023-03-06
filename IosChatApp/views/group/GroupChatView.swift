@@ -45,6 +45,7 @@ struct GroupChatView: View {
                 }
                 //MARK: chat message view
                 chatMessageView
+                    .padding(.top, 15)
             }
             .toolbar {
                 if let group = userVm.selectedGroup {
@@ -135,12 +136,11 @@ struct GroupChatView: View {
                                 Text(String(message.name.first!).capitalized)
                                     .font(.primaryBold)
                             }
-                            .opacity(msgIsFromSameUser ? 0 : 1)
                     }
                     VStack(alignment: .leading) {
                         if !msgIsFromSameUser {
-                            Text(isUser ? "You" : message.name.capitalized)
-                                .font(.secondaryBold)
+                            Text( message.name.capitalized)
+                                .font(.secondaryMedium)
                                 .foregroundColor(Color(uiColor: .secondaryLabel))
                                 .padding([.trailing, .leading, .top])
                         }
@@ -161,6 +161,7 @@ struct GroupChatView: View {
                                 .stroke(Color.accentColor, lineWidth: 1.50)
                         }
                     }
+                    .frame(maxWidth: 300, alignment: isUser ? .trailing : .leading)
                 }
             }
             .frame(maxWidth: .infinity, alignment: isUser ? .trailing : isNotification ? .center : .leading)
