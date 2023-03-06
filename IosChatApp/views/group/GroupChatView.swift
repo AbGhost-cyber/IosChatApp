@@ -10,10 +10,11 @@ import SwiftUI
 struct GroupChatView: View {
     @ObservedObject var userVm: UserSocketViewModel
     @Environment(\.colorScheme) var colorScheme
-    @FocusState private var msgFieldIsFocused: Bool
+    @FocusState var msgFieldIsFocused: Bool
     
     var body: some View {
-            VStack {
+        NavigationStack {
+            VStack(spacing: 0) {
                 ScrollView(showsIndicators: false) {
                     ScrollViewReader { scrollProxy in
                         LazyVStack {
@@ -35,6 +36,13 @@ struct GroupChatView: View {
                 }.onTapGesture {
                     msgFieldIsFocused = false
                 }
+                .overlay {
+                    if let group = userVm.selectedGroup {
+                        if group.messages.isEmpty {
+                            NoItemView(text: "no messages yet")
+                        }
+                    }
+                }
                 //MARK: chat message view
                 chatMessageView
             }
@@ -48,14 +56,8 @@ struct GroupChatView: View {
                     }
                 }
             }
-            .overlay {
-                if let group = userVm.selectedGroup {
-                    if group.messages.isEmpty {
-                        NoItemView(text: "no messages yet")
-                    }
-                }
-            }
             .embedZstack()
+        }
     }
     
     private func scrollToLastMessage(proxy: ScrollViewProxy) {
@@ -177,6 +179,9 @@ struct GroupChatView: View {
 
 struct GroupChatView_Previews: PreviewProvider {
     static var previews: some View {
-        GroupChatView(userVm: UserSocketViewModel())
+        NavigationStack {
+            GroupChatView(userVm: UserSocketViewModel())
+                .preferredColorScheme(.dark)
+        }
     }
 }

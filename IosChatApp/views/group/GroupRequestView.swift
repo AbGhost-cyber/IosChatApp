@@ -82,6 +82,7 @@ struct GroupRequestView: View {
             self.selections = []
             if !userVm.hasError {
                 self.requests = updatedRequests
+               await userVm.fetchGroups()
             }
         }
     }

@@ -225,11 +225,14 @@ class UserSocketViewModel: ObservableObject {
     func fetchUserGroupCreds() async {
         do {
             let response = try await userSocketService.fetchGroupCred()
-            print("response cred: \(response)")
             //decrypt admin stuff if request was accepted
             for cred in response {
                 try security.decryptAdminSymmetryKey(with: cred.publicKey, and: cred.groupId)
             }
+            // send back to server to delete cred
+            if response.isEmpty { return }
+            let delResponse = try await userSocketService.deleteGroupCreds(with: response.map{$0.groupId})
+            print("delete res: \(delResponse)")
         } catch {
             print("fetch credentials: \(error.localizedDescription)")
             setErrorWithMsg(error.localizedDescription)
@@ -243,6 +246,8 @@ class UserSocketViewModel: ObservableObject {
                 let decipheredMsg = try security.decryptMessage(incoming.message, for: group.groupId)
                 messages.append(IncomingMessage(name: incoming.name, message: decipheredMsg, id: incoming.id))
             }
+        } catch SecurityException.adminKeyNotFound {
+            print("admin key appears to be missing")
         } catch {
             print("couldn't decrypt msg")
         }

@@ -48,10 +48,6 @@ struct HomeView: View {
     
     private func doOnStart() {
         Task {
-            await userSocketVm.fetchUserGroupCreds()
-        }
-        
-        Task {
             await userSocketVm.fetchGroups()
         }
         
@@ -60,6 +56,9 @@ struct HomeView: View {
         }
         Task {
             await userSocketVm.listenForGroupAccept()
+        }
+        Task {
+            await userSocketVm.fetchUserGroupCreds()
         }
     }
     

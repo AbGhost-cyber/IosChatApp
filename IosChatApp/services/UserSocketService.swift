@@ -17,6 +17,7 @@ protocol UserSocketService {
     func searchGroups(with keyword: String) async throws -> [SearchGroupResponse]
     func joinGroup(with request: JoinRequestOutGoing) async throws -> String
     func fetchGroupCred() async throws -> [GroupAcceptResponse]
+    func deleteGroupCreds(with ids: [String]) async throws -> String
     func handleAdminGroupRequest(groupId:String, with request: GroupAcceptResponse?,
                                  username: String, action: String) async throws -> [JoinRequestIncoming]
 }
@@ -136,6 +137,18 @@ class UserSocketImpl: UserSocketService {
         var urlRequest = try URLRequest.requestWithToken(url: url, addAppHeader: true)
         urlRequest.httpMethod = "POST"
         urlRequest.httpBody = try JSONEncoder().encode(request)
+        let (data, _) = try await session.data(for: urlRequest)
+        if let response = String(data: data, encoding: .utf8) {
+            return response
+        }
+        throw ServiceError.decodingError
+    }
+    
+    func deleteGroupCreds(with ids: [String]) async throws -> String {
+        let url = try URL.getUrlString(urlString: EndPoints.DeleteCred.url)
+        var urlRequest = try URLRequest.requestWithToken(url: url, addAppHeader: true)
+        urlRequest.httpMethod = "POST"
+        urlRequest.httpBody = try JSONEncoder().encode(ids)
         let (data, _) = try await session.data(for: urlRequest)
         if let response = String(data: data, encoding: .utf8) {
             return response

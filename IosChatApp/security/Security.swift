@@ -147,7 +147,9 @@ class SecurityImpl: Security {
         let userSecretKey = try RSA(rawRepresentation: fetchUserRSAPrivateKeyForGroup(with: groupId))
         let originalDecryptedData = try userSecretKey.decrypt(encryptedGroupKey)
         if let groupSymmetricKey = String(data: Data(originalDecryptedData), encoding: .utf8) {
-            userCredentials[groupId] = groupSymmetricKey
+            userCredentials[groupId] = groupSymmetricKey.toBase64()
+            // save changes to user defaults
+            userDefaults.set(userCredentials, forKey: secKey)
             return
         }
         throw SecurityException.userGroupKeyDecryptError
@@ -156,7 +158,6 @@ class SecurityImpl: Security {
     
     // encrypt our message using group symmetric key
     func encryptMessage(_ text: String, for groupId: String) throws -> String {
-        print("trying encryption...")
         let groupSymmetricKey = try fetchKeyByGroupId(groupId)
         let aes = try AES(key: groupSymmetricKey, iv: iv)
         let encrypt = try aes.encrypt(Array(text.utf8))
@@ -165,7 +166,6 @@ class SecurityImpl: Security {
     
     //decrypt our message using group symmetric key
     func decryptMessage(_ text: String, for groupId: String) throws -> String {
-        print("decrypting...")
         let groupSymmetricKey = try fetchKeyByGroupId(groupId)
         let aes = try AES(key: groupSymmetricKey, iv: iv)
         let decrypt = try aes.decrypt(Array(hex: text))

@@ -41,6 +41,10 @@ extension EndPoints {
         EndPoints(url: "\(HTTP_URL)/fetchGroupCred")
     }
     
+    static var DeleteCred: EndPoints {
+        EndPoints(url: "\(HTTP_URL)/deleteGroupCred")
+    }
+    
     static func AdminGroupRequest(groupId: String, for username: String) -> EndPoints {
         EndPoints(url: "\(HTTP_URL)/group/\(groupId)/\(username)/request")
     }
