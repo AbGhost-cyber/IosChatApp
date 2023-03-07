@@ -13,7 +13,7 @@ protocol UserSocketService {
     func createGroup(with request: CreateGroupRequest) async throws -> Group
     func onGroupChange(callback: @escaping(Group) -> Void) async
     func onGroupAccept(callback: @escaping(GroupAcceptResponse) -> Void) async
-    func sendMessage(text: String, groupId: String) async throws
+    func sendMessage(msg: OutGoingMessage) async throws
     func searchGroups(with keyword: String) async throws -> [SearchGroupResponse]
     func joinGroup(with request: JoinRequestOutGoing) async throws -> String
     func fetchGroupCred() async throws -> [GroupAcceptResponse]
@@ -72,8 +72,7 @@ class UserSocketImpl: UserSocketService {
         throw ServiceError.decodingError
     }
     
-    func sendMessage(text: String, groupId: String) async throws {
-        let msg = OutGoingMessage(message: text, groupId: groupId)
+    func sendMessage(msg: OutGoingMessage) async throws {
         let data = try JSONEncoder().encode(msg)
         if let dataStr = String(data: data, encoding: .utf8) {
             try await webSocketTask?.send(.string(dataStr))

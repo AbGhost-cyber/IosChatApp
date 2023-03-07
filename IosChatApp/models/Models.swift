@@ -70,6 +70,7 @@ struct IncomingMessage: Codable, Identifiable, Hashable {
 struct OutGoingMessage: Codable {
     let message: String
     let groupId: String
+    let isNotification: Bool
 }
 
 struct CreateGroupRequest: Codable {

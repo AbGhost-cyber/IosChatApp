@@ -53,6 +53,7 @@ struct GroupRequestView: View {
                 }
             } message: {
                 Text(userVm.userMessage)
+                    .font(.secondaryText)
             }
             .confirmationDialog("Choose Action", isPresented: $showActions) {
                 Button("Accept request") {
@@ -65,7 +66,6 @@ struct GroupRequestView: View {
             } message: {
                 Text("Choose what action to perform")
             }
-            .embedZstack()
         }
     }
     
@@ -79,9 +79,15 @@ struct GroupRequestView: View {
               )
             }
             self.isEditing = false
-            self.selections = []
             if !userVm.hasError {
                 self.requests = updatedRequests
+                if let group = userVm.selectedGroup {
+                    for selection in selections {
+                        userVm.message = "\(selection.username) was added to the group by Admin \(group.adminName)"
+                        await userVm.sendMessage(with: group.groupId, isNotification: true)
+                    }
+                    self.selections = []
+                }
                await userVm.fetchGroups()
             }
         }

@@ -11,6 +11,7 @@ struct GroupChatView: View {
     @ObservedObject var userVm: UserSocketViewModel
     @Environment(\.colorScheme) var colorScheme
     @FocusState var msgFieldIsFocused: Bool
+    @State private var msgChatViewPadding: CGFloat = 0
     
     var body: some View {
         NavigationStack {
@@ -36,6 +37,13 @@ struct GroupChatView: View {
                 }.onTapGesture {
                     msgFieldIsFocused = false
                 }
+                .onChange(of: userVm.selectedGroup, perform: { group in
+                    if let group = group {
+                        msgChatViewPadding = group.messages.isEmpty ? 0 : 15.0
+                    }else {
+                        msgChatViewPadding = 0
+                    }
+                })
                 .overlay {
                     if let group = userVm.selectedGroup {
                         if group.messages.isEmpty {
@@ -45,7 +53,7 @@ struct GroupChatView: View {
                 }
                 //MARK: chat message view
                 chatMessageView
-                    .padding(.top, 15)
+                    .padding(.top, msgChatViewPadding)
             }
             .toolbar {
                 if let group = userVm.selectedGroup {
@@ -89,6 +97,7 @@ struct GroupChatView: View {
         }
     }
     
+    @ViewBuilder
     private var chatMessageView: some View {
         HStack(alignment: .bottom) {
             TextField("write a message", text: $userVm.message, axis: .vertical)
@@ -101,7 +110,7 @@ struct GroupChatView: View {
                 .padding(.top, 10)
             AsyncButton {
                 guard let group = userVm.selectedGroup else { return }
-                try await userVm.sendMessage(with: group.groupId)
+                await userVm.sendMessage(with: group.groupId)
             } label: {
                 Image(systemName: "arrow.up.circle.fill")
                     .symbolRenderingMode(.multicolor)
@@ -139,7 +148,7 @@ struct GroupChatView: View {
                     }
                     VStack(alignment: .leading) {
                         if !msgIsFromSameUser {
-                            Text( message.name.capitalized)
+                            Text(isUser ? "You": message.name.capitalized)
                                 .font(.secondaryMedium)
                                 .foregroundColor(Color(uiColor: .secondaryLabel))
                                 .padding([.trailing, .leading, .top])

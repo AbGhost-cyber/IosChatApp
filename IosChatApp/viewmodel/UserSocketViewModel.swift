@@ -124,13 +124,14 @@ class UserSocketViewModel: ObservableObject {
         }
     }
     
-    func sendMessage(with groupId: String) async throws {
+    func sendMessage(with groupId: String, isNotification: Bool = false) async {
         if message.isEmpty {
             return
         }
         do {
             let encryptedMsg = try security.encryptMessage(message.trimmingCharacters(in: .whitespacesAndNewlines), for: groupId)
-            try await userSocketService.sendMessage(text: encryptedMsg, groupId: groupId)
+            let msg = OutGoingMessage(message: encryptedMsg, groupId: groupId, isNotification: isNotification)
+            try await userSocketService.sendMessage(msg: msg)
             self.message = ""
         } catch {
             print("couldn't encrypt msg for groupId: \(groupId)")

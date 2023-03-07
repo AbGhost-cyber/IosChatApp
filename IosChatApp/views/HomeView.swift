@@ -96,7 +96,7 @@ struct HomeView: View {
     
     @ViewBuilder
     private var overlayView: some View {
-        if userSocketVm.hasError {
+        if userSocketVm.hasError && userSocketVm.decryptedGroups.isEmpty {
             ErrorView(msg: userSocketVm.userMessage) {
                 doOnStart()
             }
@@ -126,7 +126,12 @@ struct HomeView: View {
     func getMessageToDisplay(for group: Group) -> String {
         var messageToDisplay = ""
         if let lastMessage = group.messages.last {
-            messageToDisplay = "\(lastMessage.name): \(lastMessage.message)"
+            if lastMessage.name.isEmpty {
+                messageToDisplay = lastMessage.message
+            }else {
+                let name = lastMessage.name == userSocketVm.getUserName() ? "you" : lastMessage.name
+                messageToDisplay = "\(name): \(lastMessage.message)"
+            }
         }
         if messageToDisplay.isEmpty {
             return "no messages yet"
